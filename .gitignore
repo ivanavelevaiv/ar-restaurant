@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+Thumbs.db
+
+# 16 MB original backup — keep only the optimised working model in the repo
+models/shrimp-pasta-original.glb

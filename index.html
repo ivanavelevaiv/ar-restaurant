@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veleva's — AR Dining Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="bg-grain"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <nav class="nav">
+        <div class="nav-logo">
+            <span class="logo-mark">&#9670;</span>
+            <span class="logo-text">VELEVA'S</span>
+        </div>
+        <div class="nav-tagline">AR DINING EXPERIENCE</div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-left">
+            <p class="hero-eyebrow">Warm food, warm welcome. Explore Ivana&rsquo;s menu</p>
+            <div class="hero-divider"></div>
+            <h1 class="hero-title">
+                <span class="title-line">Crave it.</span>
+                <span class="title-line italic">Love it.</span>
+            </h1>
+            <p class="hero-subtitle">Scan each dish in augmented reality before you order. Experience food like never before.</p>
+            <div class="hero-actions">
+                <a href="#menu" class="hero-cta">
+                    <span>Explore the Menu</span>
+                    <span class="cta-arrow">&#8595;</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-right" aria-hidden="true">
+            <div class="hero-emblem-wrap">
+                <svg class="hero-emblem" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="heroGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+                            <stop offset="55%" stop-color="#c9a84c" stop-opacity="0.04"/>
+                            <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Ambient glow fill -->
+                    <circle cx="250" cy="250" r="245" fill="url(#heroGlow)"/>
+                    <!-- Outermost dashed ring — rotates slowly via CSS -->
+                    <g class="emblem-ring-outer">
+                        <circle cx="250" cy="250" r="237" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.18" stroke-dasharray="3 11"/>
+                    </g>
+                    <!-- Ring 2 -->
+                    <circle cx="250" cy="250" r="208" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.28"/>
+                    <!-- Compass tick marks (N/S/E/W, from r=224 to r=208) -->
+                    <line x1="250" y1="26"  x2="250" y2="42"  stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.35"/>
+                    <line x1="250" y1="458" x2="250" y2="474" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.35"/>
+                    <line x1="26"  y1="250" x2="42"  y2="250" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.35"/>
+                    <line x1="458" y1="250" x2="474" y2="250" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.35"/>
+                    <!-- 45° dot markers on ring 2 -->
+                    <circle cx="397" cy="103" r="2" fill="#c9a84c" fill-opacity="0.28"/>
+                    <circle cx="103" cy="103" r="2" fill="#c9a84c" fill-opacity="0.28"/>
+                    <circle cx="397" cy="397" r="2" fill="#c9a84c" fill-opacity="0.28"/>
+                    <circle cx="103" cy="397" r="2" fill="#c9a84c" fill-opacity="0.28"/>
+                    <!-- Ring 3 — inner dashed accent -->
+                    <circle cx="250" cy="250" r="170" stroke="#c9a84c" stroke-width="0.4" stroke-opacity="0.15" stroke-dasharray="2 8"/>
+                    <!-- Ring 4 — main accent ring -->
+                    <circle cx="250" cy="250" r="130" stroke="#c9a84c" stroke-width="1" stroke-opacity="0.42"/>
+                    <!-- Dot markers at compass points on ring 4 -->
+                    <circle cx="250" cy="120" r="3" fill="#c9a84c" fill-opacity="0.48"/>
+                    <circle cx="250" cy="380" r="3" fill="#c9a84c" fill-opacity="0.48"/>
+                    <circle cx="120" cy="250" r="3" fill="#c9a84c" fill-opacity="0.48"/>
+                    <circle cx="380" cy="250" r="3" fill="#c9a84c" fill-opacity="0.48"/>
+                    <!-- Ring 5 -->
+                    <circle cx="250" cy="250" r="84" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.28"/>
+                    <!-- Diamond frame (rotated square, corners at ~r=63) -->
+                    <rect x="205" y="205" width="90" height="90" rx="1" transform="rotate(45 250 250)" stroke="#c9a84c" stroke-width="0.5" stroke-opacity="0.22"/>
+                    <!-- Inner ring -->
+                    <circle cx="250" cy="250" r="50" stroke="#c9a84c" stroke-width="1" stroke-opacity="0.52"/>
+                    <!-- Central cloche motif -->
+                    <ellipse cx="250" cy="264" rx="27" ry="5" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.58"/>
+                    <path d="M 223 263 Q 222 232 250 228 Q 278 232 277 263" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.58"/>
+                    <circle cx="250" cy="225" r="4.5" stroke="#c9a84c" stroke-width="0.75" stroke-opacity="0.58"/>
+                    <!-- Center dot -->
+                    <circle cx="250" cy="250" r="2.5" fill="#c9a84c" fill-opacity="0.65"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <main class="menu-section" id="menu">
+        <div class="section-header">
+            <div class="section-label">TODAY&rsquo;S SELECTIONS</div>
+            <h2 class="section-title">Chef&rsquo;s Signatures</h2>
+        </div>
+
+        <div class="dishes-grid">
+
+            <!-- Dish 1 -->
+            <article class="dish-card" data-dish="0">
+                <div class="card-image">
+                    <div class="image-placeholder">
+                        <div class="plate-icon">
+                            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="0.75" stroke-dasharray="3 3"/>
+                                <circle cx="40" cy="40" r="18" stroke="currentColor" stroke-width="0.5"/>
+                                <path d="M32 38 Q40 30 48 38" stroke="currentColor" stroke-width="0.75" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="image-label">Dish Preview</span>
+                    </div>
+                    <div class="card-number">01</div>
+                </div>
+                <div class="card-body">
+                    <div class="dish-category">RISOTTO</div>
+                    <h3 class="dish-name">Black Truffle<br><em>Risotto</em></h3>
+                    <p class="dish-description">Aged Arborio, shaved black truffle, 24-month Parmigiano, truffle oil reduction</p>
+                    <div class="card-footer">
+                        <span class="dish-price">$32</span>
+                        <div class="card-actions">
+                            <button class="btn btn-nutrition" data-dish="0">
+                                <span class="btn-icon">&#9677;</span>
+                                Nutritional Values
+                            </button>
+                            <a href="ar-viewer.html?dish=0" class="btn btn-ar">
+                                <span class="ar-ring"></span>
+                                <span class="btn-icon">&#11041;</span>
+                                View in AR
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Dish 2 -->
+            <article class="dish-card featured" data-dish="1">
+                <div class="card-badge">CHEF&rsquo;S PICK</div>
+                <div class="card-image">
+                    <div class="image-placeholder">
+                        <div class="plate-icon">
+                            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="0.75" stroke-dasharray="3 3"/>
+                                <circle cx="40" cy="40" r="18" stroke="currentColor" stroke-width="0.5"/>
+                                <path d="M30 42 L38 34 L46 42" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="image-label">Dish Preview</span>
+                    </div>
+                    <div class="card-number">02</div>
+                </div>
+                <div class="card-body">
+                    <div class="dish-category">CREAMY SHRIMP</div>
+                    <h3 class="dish-name">Creamy Garlic<br><em>Shrimp Pasta</em></h3>
+                    <p class="dish-description">Linguine in a silky Alfredo cream, saut&eacute;ed shrimp, roasted garlic, and fragrant Italian herbs</p>
+                    <div class="card-footer">
+                        <span class="dish-price">$35</span>
+                        <div class="card-actions">
+                            <button class="btn btn-nutrition" data-dish="1">
+                                <span class="btn-icon">&#9677;</span>
+                                Nutritional Values
+                            </button>
+                            <a href="ar-viewer.html?dish=shrimp-pasta" class="btn btn-ar">
+                                <span class="ar-ring"></span>
+                                <span class="btn-icon">&#11041;</span>
+                                View in AR
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Dish 3 -->
+            <article class="dish-card" data-dish="2">
+                <div class="card-image">
+                    <div class="image-placeholder">
+                        <div class="plate-icon">
+                            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="28" stroke="currentColor" stroke-width="0.75" stroke-dasharray="3 3"/>
+                                <ellipse cx="40" cy="40" rx="18" ry="12" stroke="currentColor" stroke-width="0.5"/>
+                                <path d="M32 40 Q40 36 48 40" stroke="currentColor" stroke-width="0.75" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span class="image-label">Dish Preview</span>
+                    </div>
+                    <div class="card-number">03</div>
+                </div>
+                <div class="card-body">
+                    <div class="dish-category">BISQUE</div>
+                    <h3 class="dish-name">Nova Scotia<br><em>Lobster Bisque</em></h3>
+                    <p class="dish-description">Cold-water lobster, cognac cream, tarragon oil, cr&egrave;me fra&icirc;che, chive dust</p>
+                    <div class="card-footer">
+                        <span class="dish-price">$28</span>
+                        <div class="card-actions">
+                            <button class="btn btn-nutrition" data-dish="2">
+                                <span class="btn-icon">&#9677;</span>
+                                Nutritional Values
+                            </button>
+                            <a href="ar-viewer.html?dish=2" class="btn btn-ar">
+                                <span class="ar-ring"></span>
+                                <span class="btn-icon">&#11041;</span>
+                                View in AR
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-logo">&#9670; VELEVA'S</div>
+        <p class="footer-text">Point your camera at any dish to experience it in augmented reality</p>
+    </footer>
+
+    <!-- Nutritional Modal -->
+    <div class="modal-overlay" id="nutritionModal" role="dialog" aria-modal="true" aria-labelledby="modalDishName">
+        <div class="modal">
+            <button class="modal-close" id="modalClose" aria-label="Close">&#10005;</button>
+            <div class="modal-header">
+                <div class="modal-eyebrow">NUTRITIONAL INFORMATION</div>
+                <h2 class="modal-dish-name" id="modalDishName"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="calories-display">
+                    <span class="calories-number" id="modalCalories"></span>
+                    <span class="calories-label">KCAL</span>
+                </div>
+                <div class="macros-grid">
+                    <div class="macro-item">
+                        <div class="macro-bar-container">
+                            <div class="macro-bar protein-bar" id="proteinBar"></div>
+                        </div>
+                        <span class="macro-value" id="proteinVal"></span>
+                        <span class="macro-label">PROTEIN</span>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-bar-container">
+                            <div class="macro-bar carbs-bar" id="carbsBar"></div>
+                        </div>
+                        <span class="macro-value" id="carbsVal"></span>
+                        <span class="macro-label">CARBS</span>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-bar-container">
+                            <div class="macro-bar fat-bar" id="fatBar"></div>
+                        </div>
+                        <span class="macro-value" id="fatVal"></span>
+                        <span class="macro-label">FAT</span>
+                    </div>
+                </div>
+                <div class="allergens-section">
+                    <div class="allergens-label">ALLERGENS</div>
+                    <div class="allergens-list" id="allergensList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

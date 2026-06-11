@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Viewer &mdash; Veleva's</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- model-viewer — current stable ES-module build -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #06050a;
+            --gold: #c9a84c;
+            --gold-dim: rgba(201, 168, 76, 0.5);
+            --teal: #5ecfca;
+            --teal-dim: rgba(94, 207, 202, 0.3);
+            --text: #f0e6d3;
+            --text-dim: rgba(240, 230, 211, 0.4);
+            --border: rgba(201, 168, 76, 0.15);
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-ui: 'Syne', sans-serif;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: var(--font-ui);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Full-screen orbit/AR viewer ── */
+        model-viewer {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            /* Style model-viewer's built-in loading bar to match site palette */
+            --progress-bar-color: var(--teal);
+            --progress-mask: var(--bg);
+        }
+
+        /* ── AR button (placed via slot="ar-button") ── */
+        /* model-viewer positions this at bottom-centre; shown only on AR-capable devices */
+        .ar-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-family: var(--font-ui);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: var(--gold);
+            background: rgba(6, 5, 10, 0.85);
+            border: 1px solid rgba(201, 168, 76, 0.45);
+            padding: 0.65rem 1.5rem;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: color 0.3s var(--ease),
+                        background 0.3s var(--ease),
+                        border-color 0.3s var(--ease);
+            /* Push away from the viewport bottom edge */
+            margin-bottom: 4.5rem;
+        }
+
+        .ar-btn:hover {
+            color: var(--text);
+            background: rgba(201, 168, 76, 0.08);
+            border-color: rgba(201, 168, 76, 0.65);
+        }
+
+        .ar-btn::before {
+            /* Small cube/AR icon using Unicode box-drawing — no external asset needed */
+            content: '⬡';
+            font-size: 0.75rem;
+            color: var(--teal);
+            line-height: 1;
+        }
+
+        /* ── Back button ── */
+        .back-btn {
+            position: fixed;
+            top: 1.75rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--font-ui);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 0.55rem 1rem;
+            transition: all 0.3s var(--ease);
+            background: rgba(6, 5, 10, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
+            border-color: rgba(201, 168, 76, 0.4);
+            background: rgba(201, 168, 76, 0.06);
+        }
+
+        .back-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .back-btn:hover .back-arrow { transform: translateX(-3px); }
+
+        /* ── Nav logo ── */
+        .nav-logo {
+            position: fixed;
+            top: 1.75rem;
+            right: 2rem;
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.25em;
+            color: var(--gold-dim);
+            z-index: 10;
+        }
+
+        /* ── "AR model coming soon" fallback ── */
+        #coming-soon {
+            position: fixed;
+            inset: 0;
+            display: none;   /* JS sets to flex when slug has no mapped model */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            background: var(--bg);
+            text-align: center;
+        }
+
+        #coming-soon::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+            background-size: 80px 80px;
+            pointer-events: none;
+        }
+
+        .soon-eyebrow {
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            color: var(--gold-dim);
+            font-weight: 500;
+        }
+
+        .soon-heading {
+            font-family: var(--font-display);
+            font-weight: 300;
+            font-size: clamp(2rem, 8vw, 3rem);
+            color: var(--text);
+            line-height: 1.1;
+        }
+
+        .soon-heading em {
+            font-style: italic;
+            color: var(--teal);
+        }
+
+        .soon-subtext {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            letter-spacing: 0.03em;
+            max-width: 300px;
+            line-height: 1.7;
+        }
+
+        .soon-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--text-dim);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 0.55rem 1.25rem;
+            background: rgba(6, 5, 10, 0.8);
+            transition: all 0.3s var(--ease);
+        }
+
+        .soon-back:hover {
+            color: var(--text);
+            border-color: rgba(201, 168, 76, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .back-btn { top: 1.25rem; left: 1.25rem; }
+            .nav-logo { top: 1.25rem; right: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Persistent chrome ── -->
+    <a href="index.html" class="back-btn">
+        <span class="back-arrow">&#8592;</span>
+        BACK TO MENU
+    </a>
+    <div class="nav-logo">&#9670; VELEVA'S</div>
+
+    <!-- ── "AR model coming soon" (shown when slug has no mapped model) ── -->
+    <div id="coming-soon">
+        <p class="soon-eyebrow">AUGMENTED REALITY</p>
+        <h1 class="soon-heading">AR Model<br><em>Coming Soon</em></h1>
+        <p class="soon-subtext">We&rsquo;re still crafting the 3D experience for this dish. Check back soon.</p>
+        <a href="index.html" class="soon-back">&#8592; BACK TO MENU</a>
+    </div>
+
+    <script>
+        // ── Dish → model map ──────────────────────────────────────────────
+        // Key  : the ?dish= slug in the URL
+        // Value: relative path to the .glb
+        const MODEL_MAP = {
+            'shrimp-pasta': 'models/shrimp-pasta.glb',
+        };
+
+        const slug      = new URLSearchParams(window.location.search).get('dish');
+        const modelPath = slug ? MODEL_MAP[slug] : null;
+
+        if (!modelPath) {
+            document.getElementById('coming-soon').style.display = 'flex';
+        } else {
+            // ── <model-viewer> notes ──────────────────────────────────────
+            //
+            // The orbit viewer (drag to rotate, auto-rotate) works everywhere:
+            // desktop, mobile, HTTP or HTTPS — no camera permission needed.
+            //
+            // The "View in AR" button places the dish on a real surface without
+            // any printed marker. It uses:
+            //   • WebXR       — Android Chrome / supported browsers
+            //   • Scene Viewer — Google's AR viewer (Android fallback)
+            //   • Quick Look  — Apple AR on iOS Safari
+            // model-viewer automatically shows the AR button only when the device
+            // and browser support one of these modes. It requires HTTPS in production;
+            // on a local network over HTTP it may be hidden or unavailable.
+            // ─────────────────────────────────────────────────────────────
+
+            const mv = document.createElement('model-viewer');
+
+            // ── Source & loading ──────────────────────────────────────────
+            mv.setAttribute('src', modelPath);
+            mv.setAttribute('alt', '3D model of the dish');
+            mv.setAttribute('loading', 'eager');
+            mv.setAttribute('reveal', 'auto');   // show model as soon as it's ready
+
+            // ── Orbit controls & turntable ────────────────────────────────
+            mv.setAttribute('camera-controls', '');
+            mv.setAttribute('auto-rotate', '');
+            mv.setAttribute('auto-rotate-delay', '2000');       // ms idle before spin starts
+            mv.setAttribute('rotation-per-second', '15deg');    // gentle turntable speed
+            mv.setAttribute('interaction-prompt', 'auto');      // show drag-hint on first load
+            mv.setAttribute('interaction-prompt-style', 'basic');
+
+            // ── Camera framing ────────────────────────────────────────────
+            // camera-orbit: theta (horizontal) phi (vertical from top) radius
+            // 70° phi = slightly elevated, like looking at food on a table
+            // Adjust these if the model appears too far away or clipped.
+            mv.setAttribute('camera-orbit', '0deg 70deg auto');
+            mv.setAttribute('field-of-view', '30deg');           // gentle telephoto framing
+
+            // ── Lighting & PBR environment ────────────────────────────────
+            // 'neutral' provides consistent PBR shading without a scene-specific HDR
+            mv.setAttribute('environment-image', 'neutral');
+            mv.setAttribute('exposure', '1.1');
+            mv.setAttribute('shadow-intensity', '1');
+            mv.setAttribute('shadow-softness', '0.9');
+
+            // ── Markerless AR (phone only) ────────────────────────────────
+            mv.setAttribute('ar', '');
+            mv.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
+            mv.setAttribute('ar-scale', 'auto');
+
+            mv.id = 'dish-viewer';
+
+            // ── Custom AR button ──────────────────────────────────────────
+            // slot="ar-button" hooks into model-viewer's AR entry point.
+            // model-viewer shows this button only on AR-capable devices.
+            const arBtn = document.createElement('button');
+            arBtn.setAttribute('slot', 'ar-button');
+            arBtn.className = 'ar-btn';
+            arBtn.textContent = 'VIEW IN AR';
+            mv.appendChild(arBtn);
+
+            document.body.appendChild(mv);
+        }
+    </script>
+
+</body>
+</html>
