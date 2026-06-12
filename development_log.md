@@ -322,3 +322,29 @@ Switched the AR button from gold to **teal** border and text. Gold is reserved f
 | 375 px (mobile) | Top-left, fixed | Bottom-centre, fixed, 44 px tall |
 | 768 px (tablet) | Top-left, fixed | Bottom-centre, fixed, 44 px tall |
 | Desktop | Top-left, fixed | Bottom-centre, fixed (hidden by model-viewer if no AR support) |
+
+---
+
+## Step 9 — Shrimp Pasta Dish Photo Added
+**Date:** 2026-06-12
+**Phase:** Content / Assets
+
+### Summary
+Added `second_dish.jpg` (295 KB) as the real preview photo for the Creamy Garlic Shrimp Pasta dish, replacing the SVG plate placeholder.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `images/second_dish.jpg` | New — dish photo copied from `second_dish.JPG` (lowercase extension) |
+| `index.html` | Dish 2 card: `.image-placeholder` SVG replaced with `<img class="card-img">` |
+| `styles.css` | Added `.card-img` rule (`position: absolute; inset: 0; object-fit: cover`) |
+| `ar-viewer.html` | Added `POSTER_MAP`; `poster="images/second_dish.jpg"` set on `<model-viewer>` for `shrimp-pasta` slug |
+| `.gitignore` | Widened root GLB exclusion from named files to `/*.glb` pattern |
+
+### How the poster works in `<model-viewer>`
+When the `poster` attribute is set, model-viewer displays the image immediately while the `.glb` downloads. Once the 3D model is ready, `reveal="auto"` fades it in and replaces the poster. This eliminates the blank-screen wait on slower connections.
+
+### Adding photos for other dishes
+1. Drop the image in `images/`
+2. Add an entry to `POSTER_MAP` in `ar-viewer.html`
+3. Replace the `.image-placeholder` in the relevant dish card in `index.html`
