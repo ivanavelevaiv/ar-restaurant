@@ -49,38 +49,56 @@
             --progress-mask: var(--bg);
         }
 
-        /* ── AR button (placed via slot="ar-button") ── */
-        /* model-viewer positions this at bottom-centre; shown only on AR-capable devices */
+        /* ── AR button (slot="ar-button") ─────────────────────────────
+           position: fixed escapes model-viewer's shadow DOM slot container
+           and anchors the button directly to the viewport bottom-centre.
+           Teal border/text distinguishes it from the gold back button.
+           z-index: 9 keeps it below the chrome (z=10) but above the viewer. */
         .ar-btn {
+            /* Viewport-anchored bottom-centre placement */
+            position: fixed;
+            bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9;
+
+            /* Layout */
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.55rem;
+            white-space: nowrap;
+
+            /* 44 px minimum tap target (WCAG / Apple HIG) */
+            min-height: 44px;
+            padding: 0 1.75rem;
+
+            /* Typography */
             font-family: var(--font-ui);
             font-size: 0.65rem;
             font-weight: 600;
             letter-spacing: 0.18em;
-            color: var(--gold);
+
+            /* Theme — teal to distinguish from the gold back button */
+            color: var(--teal);
             background: rgba(6, 5, 10, 0.85);
-            border: 1px solid rgba(201, 168, 76, 0.45);
-            padding: 0.65rem 1.5rem;
+            border: 1px solid rgba(94, 207, 202, 0.45);
+
             cursor: pointer;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             transition: color 0.3s var(--ease),
                         background 0.3s var(--ease),
                         border-color 0.3s var(--ease);
-            /* Push away from the viewport bottom edge */
-            margin-bottom: 4.5rem;
         }
 
         .ar-btn:hover {
             color: var(--text);
-            background: rgba(201, 168, 76, 0.08);
-            border-color: rgba(201, 168, 76, 0.65);
+            background: rgba(94, 207, 202, 0.08);
+            border-color: rgba(94, 207, 202, 0.7);
         }
 
         .ar-btn::before {
-            /* Small cube/AR icon using Unicode box-drawing — no external asset needed */
             content: '⬡';
             font-size: 0.75rem;
             color: var(--teal);

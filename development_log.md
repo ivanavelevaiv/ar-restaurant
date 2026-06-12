@@ -287,3 +287,38 @@ Swapped the active shrimp pasta model in `MODEL_MAP` from `models/shrimp-pasta.g
 ```
 npx @gltf-transform/cli optimize models/pasta-update.glb models/pasta-update.glb --texture-size 1024 --texture-compress webp --compress false
 ```
+
+---
+
+## Step 8 — AR Button Layout Fix
+**Date:** 2026-06-12
+**Phase:** UI / Layout
+
+### Problem
+The "View in AR" `ar-button` and the "Back to Menu" button were overlapping in the top-left corner on mobile. The previous `margin-bottom: 4.5rem` on `.ar-btn` had no effect because model-viewer's shadow DOM slot container controls its own internal layout — margins on slotted content don't influence the container's position within the component.
+
+### Fix
+Replaced `margin-bottom` with `position: fixed` on `.ar-btn`, anchoring it directly to the viewport independent of model-viewer's slot container:
+
+```css
+.ar-btn {
+    position: fixed;
+    bottom: calc(1.75rem + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9;   /* below chrome (z=10), above the viewer */
+    min-height: 44px;   /* WCAG / Apple HIG minimum tap target */
+}
+```
+
+`env(safe-area-inset-bottom)` ensures the button clears the home indicator bar on notched iPhones.
+
+### Visual Change
+Switched the AR button from gold to **teal** border and text. Gold is reserved for the back button and nav chrome; teal already signals AR interactions throughout the site's design language. This makes the two buttons immediately distinguishable at a glance.
+
+### Layout at key breakpoints
+| Breakpoint | Back button | AR button |
+|---|---|---|
+| 375 px (mobile) | Top-left, fixed | Bottom-centre, fixed, 44 px tall |
+| 768 px (tablet) | Top-left, fixed | Bottom-centre, fixed, 44 px tall |
+| Desktop | Top-left, fixed | Bottom-centre, fixed (hidden by model-viewer if no AR support) |
