@@ -348,3 +348,25 @@ When the `poster` attribute is set, model-viewer displays the image immediately 
 1. Drop the image in `images/`
 2. Add an entry to `POSTER_MAP` in `ar-viewer.html`
 3. Replace the `.image-placeholder` in the relevant dish card in `index.html`
+
+---
+
+## Step 10 — Fix Dish Preview Image Fit
+**Date:** 2026-06-12
+**Phase:** UI / Content
+
+### Problem
+`second_dish.jpg` was cropped and zoomed in the card because `.card-img` used `object-fit: cover`, which fills the container at the cost of clipping the image.
+
+### Fix
+Changed `.card-img` in `styles.css` to `object-fit: contain` so the full dish photo is always visible. Added `background: #0a0908` on the same rule to fill the letterbox areas with a near-black tone, preventing the card's gold gradient from bleeding through around the image edges.
+
+```css
+.card-img {
+    object-fit: contain;
+    object-position: center center;
+    background: #0a0908;
+}
+```
+
+The model-viewer poster was unaffected — model-viewer renders posters with contain behaviour by default and already has `background-color: var(--bg)` set.
