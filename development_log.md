@@ -268,3 +268,22 @@ The marker-based AR.js / A-Frame setup proved impractical for a real restaurant 
 - [ ] Configure HTTPS for iOS Quick Look testing
 - [ ] Create `.glb` models for Black Truffle Risotto and Nova Scotia Lobster Bisque
 - [ ] Add their slugs to `MODEL_MAP` in `ar-viewer.html` and update `index.html` AR links
+
+---
+
+## Step 7 — Shrimp Pasta Model Swap
+**Date:** 2026-06-12
+**Phase:** Asset Update
+
+### Change
+Swapped the active shrimp pasta model in `MODEL_MAP` from `models/shrimp-pasta.glb` to `models/pasta-update.glb`.
+
+| File | Before | After |
+|---|---|---|
+| `ar-viewer.html` — `MODEL_MAP['shrimp-pasta']` | `models/shrimp-pasta.glb` (7.7 MB, optimised) | `models/pasta-update.glb` (15.5 MB, raw) |
+
+### Note
+`pasta-update.glb` is currently unoptimised (15.5 MB vs the previous 7.7 MB). If loading feels slow on mobile, run the same gltf-transform pipeline used in Step 5:
+```
+npx @gltf-transform/cli optimize models/pasta-update.glb models/pasta-update.glb --texture-size 1024 --texture-compress webp --compress false
+```

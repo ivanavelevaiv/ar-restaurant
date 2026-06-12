@@ -4,3 +4,11 @@ Thumbs.db
 
 # 16 MB original backup — keep only the optimised working model in the repo
 models/shrimp-pasta-original.glb
+
+# Blender source/output files — raw assets that belong in a separate asset pipeline
+*.fbx
+*.obj
+# Root-level GLB exports from Blender (web-ready models live under models/)
+/steak_dish.glb
+/steak_with_salad.glb
+/steak_with_salad_dish.glb
