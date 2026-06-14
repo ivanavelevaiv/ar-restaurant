@@ -591,6 +591,82 @@ npx @gltf-transform/cli simplify --error 0.01  steak-v3.glb   steak-v3.glb
 
 ---
 
+## Step 19 — Fix Broccoli Invisible in AR: Remove WebP Textures
+**Date:** 2026-06-14  
+**Phase:** AR / Bug Fix
+
+### Symptom
+After Step 18 fixed GPU instancing (plate, steak, fries, tomatoes all visible in AR), broccoli remained invisible in iOS Quick Look AR.
+
+### Root Cause (confirmed by GLB JSON inspection)
+
+The `webp` step in Step 18's pipeline converted all 7 textures to WebP using `EXT_texture_webp`, but with **no JPEG fallback** — `tex.source` was `null` for every texture. This is the default behavior of `@gltf-transform/cli webp`: it creates WebP primary textures but does NOT generate fallback images.
+
+iOS Quick Look handles this inconsistently depending on material type:
+- **Standard PBR (`KHR_materials_pbrMetallicRoughness`)** — iOS converts glTF → USDZ internally. The conversion pipeline can render WebP textures even without a JPEG fallback (internal format handling).
+- **Unlit (`KHR_materials_unlit`)** — iOS takes a different conversion path. Without a JPEG fallback, the texture cannot be resolved → material renders fully **transparent/invisible**.
+
+Broccoli was the **only mesh** using `KHR_materials_unlit` in the model — which is why only broccoli was invisible.
+
+### Verification
+Direct inspection of `steak-v3.glb` (the WebP version):
+```
+Texture 0 : source=null (EXT_texture_webp only, no fallback)
+Texture 1 : source=null (EXT_texture_webp only, no fallback)
+...all 7 textures: EXT_texture_webp primary, null fallback
+Broccoli material: KHR_materials_unlit → texture lookup fails → transparent
+```
+
+### Fix
+
+Rebuilt `steak-v3.glb` from `stekdone1.glb` using the same pipeline as Step 18 but **without the `webp` step**:
+
+```bash
+npx @gltf-transform/cli flatten    stekdone1.glb   steak-v3.glb
+npx @gltf-transform/cli dedup      steak-v3.glb    steak-v3.glb
+npx @gltf-transform/cli join       steak-v3.glb    steak-v3.glb
+npx @gltf-transform/cli weld       steak-v3.glb    steak-v3.glb
+npx @gltf-transform/cli simplify   steak-v3.glb    steak-v3.glb
+npx @gltf-transform/cli prune      steak-v3.glb    steak-v3.glb
+npx @gltf-transform/cli resize     --width 1024 --height 1024 steak-v3.glb steak-v3.glb
+npx @gltf-transform/cli jpeg       --quality 80  steak-v3.glb steak-v3.glb
+npx @gltf-transform/cli simplify   --error 0.01  steak-v3.glb steak-v3.glb
+# NO webp step — KHR_materials_unlit + WebP (no fallback) = transparent on iOS
+# NO instance step — EXT_mesh_gpu_instancing is not supported by iOS Quick Look
+```
+
+### Result
+
+| File | Size | Extensions | Broccoli visible |
+|---|---|---|---|
+| `steak-v3.glb` (Step 18, WebP) | 13.04 MB | EXT_texture_webp, KHR_materials_unlit | ❌ |
+| `steak-v3.glb` (Step 19, JPEG) | **16.67 MB** | KHR_materials_unlit only | ✅ (expected) |
+
+Texture inspection of new file:
+```
+Extensions: KHR_materials_unlit (only — no EXT_texture_webp)
+Nodes: 6 | Meshes: 5 | GPU-instanced nodes: 0
+Texture 0: image/png (direct)
+Texture 1: image/png (direct)
+Texture 2: image/png (direct)
+Texture 3: image/jpeg (direct)
+Texture 4: image/jpeg (direct)
+Texture 5: image/jpeg (direct)
+Texture 6: image/jpeg (direct)
+```
+
+### Rule for Future Dishes
+- Do NOT use `@gltf-transform/cli webp` unless JPEG fallbacks are generated separately and patched in.
+- `KHR_materials_unlit` + WebP-only textures = invisible on iOS Quick Look.
+- Safe texture formats for iOS AR: JPEG and PNG (direct, no extension wrapper).
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/steak-v3.glb` | Rebuilt — JPEG/PNG textures only, no WebP, 16.67 MB |
+
+---
+
 ## Step 13 — First Dish Renamed to Wagyu Steak
 **Date:** 2026-06-14
 **Phase:** Content
