@@ -389,3 +389,48 @@ Added `stekdone1.glb` (97 MB) as the 3D AR model for the first dish. Updated the
 
 ### Slug Change
 The first dish previously used a numeric index (`?dish=0`) which would fall through `MODEL_MAP` and show the "coming soon" overlay. It now uses the slug `steak-salad` consistent with the slug-based routing introduced in Step 5.
+
+---
+
+## Step 12 — Fix Missing Broccoli in AR (Steak Model Cleanup)
+**Date:** 2026-06-14
+**Phase:** AR / Bug Fix
+
+### Problem
+When viewing `stekdone1.glb` in the device's native AR mode (via model-viewer's `ar-button`), parts of the model (the broccoli) were invisible. The same parts rendered correctly in the in-page 3D orbit viewer.
+
+### Root Cause
+Native AR viewers (iOS Quick Look, Android Scene Viewer / WebXR) are significantly stricter than the browser's WebGL renderer about GLB structure. Common causes for this class of bug:
+- Separate mesh objects not properly joined/welded
+- Dangling or unreferenced material/texture nodes
+- Non-embedded external texture references
+- Large unoptimised textures the native AR runtime rejects silently
+
+The original `stekdone1.glb` was a raw export (97 MB) with no optimisation pass, making it susceptible to all of the above.
+
+### Fix
+Ran the `@gltf-transform/cli` pipeline:
+
+```bash
+# Step 1 — Full optimize: dedup, instance, flatten, join, weld, simplify, prune, texture resize/compress
+npx @gltf-transform/cli optimize models/stekdone1.glb models/stekdone1-fixed.glb --texture-size 1024 --compress false
+
+# Step 2 — Prune pass: remove any remaining dangling meshes, materials, textures
+npx @gltf-transform/cli prune models/stekdone1-fixed.glb models/stekdone1-fixed.glb
+```
+
+The optimize pass runs: `dedup → instance → palette → flatten → join → weld → simplify → resample → prune → sparse → textureCompress`. This ensures all mesh parts are properly joined, all materials are embedded, and all textures are within the size limits native AR runtimes accept.
+
+### Result
+| File | Size |
+|---|---|
+| `stekdone1.glb` (original) | 97.46 MB |
+| `stekdone1-fixed.glb` (cleaned) | 14.04 MB |
+
+The prune-only pass confirmed no dangling assets remained after optimize.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/stekdone1-fixed.glb` | New — cleaned, optimized model |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` now points to `stekdone1-fixed.glb` |
