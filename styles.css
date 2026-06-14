@@ -96,6 +96,13 @@ body {
 
 .nav-logo {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.22rem;
+}
+
+.logo-lockup {
+    display: flex;
     align-items: center;
     gap: 0.6rem;
     font-family: var(--font-ui);
@@ -111,10 +118,11 @@ body {
 }
 
 .nav-tagline {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--text-dim);
+    font-size: 0.5rem;
+    letter-spacing: 0.22em;
+    color: var(--gold-dim);
     font-weight: 500;
+    padding-left: 1.25rem;
 }
 
 /* ── Hero ── */
@@ -834,29 +842,32 @@ body {
     display: flex;
     align-items: center;
     gap: 0.55rem;
-    background: transparent;
-    border: 1px solid var(--border);
+    background: rgba(6, 5, 10, 0.9);
+    border: 1px solid rgba(201, 168, 76, 0.42);
     color: var(--gold-dim);
     cursor: pointer;
-    padding: 0.45rem 1rem;
+    padding: 0.5rem 1rem;
     font-family: var(--font-ui);
     font-size: 0.6rem;
     font-weight: 700;
     letter-spacing: 0.18em;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all 0.3s var(--ease);
 }
 
 .cart-btn:hover {
     color: var(--gold);
-    border-color: var(--border-bright);
-    background: rgba(201, 168, 76, 0.06);
+    border-color: rgba(201, 168, 76, 0.72);
+    background: rgba(201, 168, 76, 0.07);
+    box-shadow: 0 0 16px rgba(201, 168, 76, 0.09);
 }
 
 .cart-icon-svg {
     width: 13px;
     height: 13px;
     flex-shrink: 0;
-    color: var(--gold);
+    stroke: var(--gold);
 }
 
 .cart-count {
@@ -1254,7 +1265,7 @@ body {
 
     .footer { padding: 2rem 1.5rem; }
 
-    .cart-btn { padding: 0.45rem 0.7rem; letter-spacing: 0.1em; }
+    .cart-btn { padding: 0.45rem 0.75rem; letter-spacing: 0.1em; }
 
     .order-panel { width: 100vw; border-left: none; }
 }

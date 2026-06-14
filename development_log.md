@@ -537,6 +537,43 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 24 — Fix Cart Icon Theme and Move AR Subtitle Under Logo
+**Date:** 2026-06-14  
+**Phase:** UI / Visual Fix
+
+### Summary
+Fixed two visual issues on the desktop nav bar:
+
+**1. Cart button gold styling**
+The cart button had a transparent background and a near-invisible border (`rgba(201,168,76,0.15)`), making the icon appear white against the dark nav. Fixed by applying an explicit dark background, a visible gold border, and `backdrop-filter: blur`. Also switched `.cart-icon-svg` from `color:` to `stroke:` to reliably force the SVG shopping bag to render in gold regardless of cascade.
+
+| Property | Before | After |
+|---|---|---|
+| background | `transparent` | `rgba(6,5,10,0.9)` |
+| border | `1px solid rgba(201,168,76,0.15)` | `1px solid rgba(201,168,76,0.42)` |
+| backdrop-filter | none | `blur(10px)` |
+| SVG color | `color: var(--gold)` | `stroke: var(--gold)` |
+| hover | border brightens | border + `box-shadow` glow |
+
+**2. "AR DINING EXPERIENCE" subtitle repositioned**
+The tagline was a standalone flex child of `<nav>`, sitting in the visual center of the nav bar. Moved it inside `<div class="nav-logo">` as a subtitle line below "VELEVA'S". Added a `.logo-lockup` wrapper for the diamond + wordmark row so `nav-logo` can be `flex-direction: column`.
+
+| Element | Before | After |
+|---|---|---|
+| `.nav-logo` | `display: flex; flex-direction: row` | `flex-direction: column; align-items: flex-start` |
+| `.logo-lockup` | — (new) | row with diamond + wordmark |
+| `.nav-tagline` | standalone nav child, centered | child of `nav-logo`, subtitle below wordmark |
+| Tagline font | `0.65rem`, `color: var(--text-dim)` | `0.5rem`, `color: var(--gold-dim)`, `padding-left: 1.25rem` (aligns under wordmark) |
+| Mobile (≤600px) | `display: none` | `display: none` (unchanged — subtitle hidden to keep logo tight) |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` | Wrapped logo diamond+text in `.logo-lockup`; moved `.nav-tagline` inside `.nav-logo` |
+| `styles.css` | Updated `.nav-logo`, added `.logo-lockup`, restyled `.nav-tagline`, fixed `.cart-btn` and `.cart-icon-svg` |
+
+---
+
 ## Step 23 — Add Order System (Add to Order, Cart Badge, Order Panel)
 **Date:** 2026-06-14  
 **Phase:** Feature / UI
