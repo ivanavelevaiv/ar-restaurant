@@ -518,6 +518,9 @@ body {
     letter-spacing: 0.15em;
     cursor: pointer;
     border: none;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
     text-decoration: none;
     transition: all var(--transition);
     position: relative;
@@ -890,22 +893,18 @@ body {
 
 /* ── Add to Order button ── */
 .btn-order {
-    background: linear-gradient(135deg,
-        rgba(201, 168, 76, 0.12) 0%,
-        rgba(201, 168, 76, 0.06) 100%
-    );
+    background: rgba(6, 5, 10, 0.95);
     color: var(--gold);
-    border: 1px solid rgba(201, 168, 76, 0.28);
+    border: 1px solid rgba(201, 168, 76, 0.38);
+    -webkit-appearance: none;
+    appearance: none;
     cursor: pointer;
     transition: all 0.3s var(--ease);
 }
 
 .btn-order:hover {
-    background: linear-gradient(135deg,
-        rgba(201, 168, 76, 0.22) 0%,
-        rgba(201, 168, 76, 0.1) 100%
-    );
-    border-color: rgba(201, 168, 76, 0.55);
+    background: rgba(201, 168, 76, 0.08);
+    border-color: rgba(201, 168, 76, 0.6);
     box-shadow: 0 0 18px rgba(201, 168, 76, 0.08);
 }
 
@@ -914,8 +913,8 @@ body {
 }
 
 .btn-order.added {
-    border-color: rgba(201, 168, 76, 0.5);
-    background: rgba(201, 168, 76, 0.1);
+    border-color: rgba(201, 168, 76, 0.55);
+    background: rgba(201, 168, 76, 0.08);
 }
 
 .btn-order:disabled {
@@ -988,9 +987,9 @@ body {
     position: absolute;
     top: 1.5rem;
     right: 1.5rem;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
+    background: rgba(6, 5, 10, 0.9);
+    border: 1px solid rgba(201, 168, 76, 0.28);
+    color: var(--gold-dim);
     width: 32px;
     height: 32px;
     display: flex;
@@ -1000,12 +999,14 @@ body {
     font-size: 0.65rem;
     transition: all 0.25s var(--ease);
     font-family: var(--font-ui);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .order-close:hover {
-    border-color: var(--border-bright);
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(201, 168, 76, 0.6);
+    color: var(--gold);
+    background: rgba(201, 168, 76, 0.06);
 }
 
 .order-body {
@@ -1086,19 +1087,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
+    background: rgba(6, 5, 10, 0.9);
+    border: 1px solid rgba(201, 168, 76, 0.28);
+    color: var(--gold-dim);
     cursor: pointer;
     font-size: 1rem;
     line-height: 1;
     transition: all 0.2s var(--ease);
     font-family: var(--font-ui);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .qty-btn:hover {
-    border-color: var(--gold-dim);
+    border-color: rgba(201, 168, 76, 0.6);
     color: var(--gold);
+    background: rgba(201, 168, 76, 0.06);
 }
 
 .qty-value {
@@ -1110,9 +1114,9 @@ body {
 }
 
 .order-item-remove {
-    background: transparent;
+    background: rgba(6, 5, 10, 0);
     border: none;
-    color: rgba(240, 230, 211, 0.18);
+    color: rgba(201, 168, 76, 0.3);
     cursor: pointer;
     font-size: 0.7rem;
     padding: 0.25rem;
@@ -1120,10 +1124,12 @@ body {
     transition: color 0.2s var(--ease);
     font-family: var(--font-ui);
     line-height: 1;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .order-item-remove:hover {
-    color: rgba(240, 230, 211, 0.65);
+    color: rgba(201, 168, 76, 0.75);
 }
 
 /* ── Order footer (total + place order) ── */
@@ -1158,11 +1164,8 @@ body {
 .btn-place-order {
     width: 100%;
     padding: 1rem;
-    background: linear-gradient(135deg,
-        rgba(201, 168, 76, 0.2) 0%,
-        rgba(201, 168, 76, 0.09) 100%
-    );
-    border: 1px solid rgba(201, 168, 76, 0.38);
+    background: rgba(6, 5, 10, 0.95);
+    border: 1px solid rgba(201, 168, 76, 0.45);
     color: var(--gold);
     font-family: var(--font-ui);
     font-size: 0.62rem;
@@ -1170,14 +1173,13 @@ body {
     letter-spacing: 0.24em;
     cursor: pointer;
     transition: all 0.3s var(--ease);
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 .btn-place-order:hover {
-    background: linear-gradient(135deg,
-        rgba(201, 168, 76, 0.3) 0%,
-        rgba(201, 168, 76, 0.14) 100%
-    );
-    border-color: rgba(201, 168, 76, 0.6);
+    background: rgba(201, 168, 76, 0.09);
+    border-color: rgba(201, 168, 76, 0.7);
     box-shadow: 0 0 28px rgba(201, 168, 76, 0.1);
 }
 
