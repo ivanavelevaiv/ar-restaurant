@@ -537,6 +537,49 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 23 — Add Order System (Add to Order, Cart Badge, Order Panel)
+**Date:** 2026-06-14  
+**Phase:** Feature / UI
+
+### Summary
+Added a fully client-side order system to the restaurant menu — no backend, all state held in memory. Three components: an "Add to Order" button on every dish card, a live cart badge in the nav, and a slide-in order summary panel.
+
+### Components
+
+#### 1. Add to Order button (`index.html`, `styles.css`)
+- Third button added below "Nutritional Values" and "View in AR" on every dish card.
+- Styled in gold (`var(--gold)`) to distinguish it as the primary action.
+- Carries `data-dish-id`, `data-dish-name`, `data-dish-price` attributes used by the cart logic.
+- On click: shows "Added ✓" for 1.5 s then resets; button is disabled during that window to prevent double-adds.
+
+#### 2. Cart badge in nav (`index.html`, `styles.css`, `script.js`)
+- `ORDER N` button in the top-right of the nav bar with a shopping bag SVG and live item count.
+- Count bounces with a CSS keyframe animation (`cartBump`) each time it updates.
+- Clicking it opens the order panel.
+
+#### 3. Order summary panel (`index.html`, `styles.css`, `script.js`)
+- Slides in from the right over a blurred dark overlay.
+- Lists each item with name, unit price, quantity (`−` / `+` buttons), and an ✕ remove button.
+- Subtotal is recalculated live on every change.
+- **Place Order** button triggers a confirmation message ("Thank you! Your order has been placed.") for 2.5 s, then clears the cart and closes the panel.
+- Close button and clicking the backdrop both dismiss the panel; Escape key also works.
+- Full-screen on mobile (`width: 100vw; border-left: none`).
+
+### Cart data structure (`script.js`)
+```js
+const cart = {};
+// { dishId: { name: string, price: number, qty: number } }
+```
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` | Cart button in nav; `btn-order` on all 3 dish cards; order panel + confirmation HTML |
+| `styles.css` | `.cart-btn`, `.cart-count`, `@keyframes cartBump`, `.btn-order`, `.order-overlay`, `.order-panel`, all panel internals, mobile overrides |
+| `script.js` | Full cart logic: `addToCart`, `updateBadge`, `renderOrderPanel`, `openOrderPanel`, `closeOrderPanel`, delegated qty/remove handlers, place-order flow |
+
+---
+
 ## Step 22 — Remove Poster Flash from AR Viewer
 **Date:** 2026-06-14  
 **Phase:** UI / Bug Fix

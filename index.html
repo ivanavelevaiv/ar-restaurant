@@ -21,6 +21,13 @@
             <span class="logo-text">VELEVA'S</span>
         </div>
         <div class="nav-tagline">AR DINING EXPERIENCE</div>
+        <button class="cart-btn" id="cartBtn" aria-label="Open order summary">
+            <svg class="cart-icon-svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 4h14l-1.5 10H4.5L3 4z"/>
+                <path d="M7 4a3 3 0 016 0"/>
+            </svg>
+            ORDER <span class="cart-count" id="cartCount">0</span>
+        </button>
     </nav>
 
     <header class="hero">
@@ -123,6 +130,10 @@
                                 <span class="btn-icon">&#11041;</span>
                                 View in AR
                             </a>
+                            <button class="btn btn-order" data-dish-id="steak-salad" data-dish-name="Wagyu Steak" data-dish-price="65">
+                                <span class="btn-icon">+</span>
+                                Add to Order
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -151,6 +162,10 @@
                                 <span class="btn-icon">&#11041;</span>
                                 View in AR
                             </a>
+                            <button class="btn btn-order" data-dish-id="shrimp-pasta" data-dish-name="Creamy Garlic Shrimp Pasta" data-dish-price="35">
+                                <span class="btn-icon">+</span>
+                                Add to Order
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -187,6 +202,10 @@
                                 <span class="btn-icon">&#11041;</span>
                                 View in AR
                             </a>
+                            <button class="btn btn-order" data-dish-id="lobster-bisque" data-dish-name="Nova Scotia Lobster Bisque" data-dish-price="28">
+                                <span class="btn-icon">+</span>
+                                Add to Order
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -199,6 +218,38 @@
         <div class="footer-logo">&#9670; VELEVA'S</div>
         <p class="footer-text">Point your camera at any dish to experience it in augmented reality</p>
     </footer>
+
+    <!-- Order Panel -->
+    <div class="order-overlay" id="orderOverlay">
+        <div class="order-panel" id="orderPanel" role="dialog" aria-modal="true" aria-label="Order summary">
+            <div class="order-panel-header">
+                <div class="order-eyebrow">YOUR ORDER</div>
+                <h2 class="order-panel-title">Order Summary</h2>
+                <button class="order-close" id="orderClose" aria-label="Close order panel">&#10005;</button>
+            </div>
+            <div class="order-body">
+                <div class="order-empty" id="orderEmpty">
+                    <p class="order-empty-text">No items yet.</p>
+                    <p class="order-empty-sub">Add dishes from the menu below.</p>
+                </div>
+                <div class="order-items" id="orderItems"></div>
+            </div>
+            <div class="order-footer" id="orderFooter">
+                <div class="order-total-row">
+                    <span class="order-total-label">TOTAL</span>
+                    <span class="order-total-price" id="orderTotal">$0</span>
+                </div>
+                <button class="btn-place-order" id="placeOrderBtn">Place Order</button>
+            </div>
+            <div class="order-confirm" id="orderConfirm">
+                <div class="order-confirm-inner">
+                    <div class="order-confirm-icon">&#10003;</div>
+                    <p class="order-confirm-title">Thank you!</p>
+                    <p class="order-confirm-sub">Your order has been placed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Nutritional Modal -->
     <div class="modal-overlay" id="nutritionModal" role="dialog" aria-modal="true" aria-labelledby="modalDishName">

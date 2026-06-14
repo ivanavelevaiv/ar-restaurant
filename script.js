@@ -104,5 +104,150 @@ overlay.addEventListener('click', e => {
 
 // Escape key closes it
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+        closeModal();
+        closeOrderPanel();
+    }
+});
+
+// ── Cart ──────────────────────────────────────────────────────────────────
+const cart = {}; // { dishId: { name, price, qty } }
+
+const cartBtn       = document.getElementById('cartBtn');
+const cartCount     = document.getElementById('cartCount');
+const orderOverlay  = document.getElementById('orderOverlay');
+const orderClose    = document.getElementById('orderClose');
+const orderItems    = document.getElementById('orderItems');
+const orderEmpty    = document.getElementById('orderEmpty');
+const orderFooter   = document.getElementById('orderFooter');
+const orderTotal    = document.getElementById('orderTotal');
+const placeOrderBtn = document.getElementById('placeOrderBtn');
+const orderConfirm  = document.getElementById('orderConfirm');
+
+function cartItemCount() {
+    return Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+}
+
+function cartTotalPrice() {
+    return Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
+}
+
+function updateBadge() {
+    cartCount.textContent = cartItemCount();
+    cartCount.classList.remove('bump');
+    void cartCount.offsetWidth; // force reflow so animation replays
+    cartCount.classList.add('bump');
+}
+
+function renderOrderPanel() {
+    const entries = Object.entries(cart);
+    if (entries.length === 0) {
+        orderEmpty.style.display = 'flex';
+        orderItems.innerHTML = '';
+        orderFooter.style.display = 'none';
+    } else {
+        orderEmpty.style.display = 'none';
+        orderFooter.style.display = '';
+        orderTotal.textContent = '$' + cartTotalPrice();
+        orderItems.innerHTML = entries.map(([id, item]) => `
+            <div class="order-item">
+                <div class="order-item-info">
+                    <div class="order-item-name">${item.name}</div>
+                    <div class="order-item-price">$${item.price} each</div>
+                </div>
+                <div class="order-qty">
+                    <button class="qty-btn" data-id="${id}" data-delta="-1">&#8722;</button>
+                    <span class="qty-value">${item.qty}</span>
+                    <button class="qty-btn" data-id="${id}" data-delta="1">+</button>
+                </div>
+                <button class="order-item-remove" data-id="${id}" aria-label="Remove ${item.name}">&#10005;</button>
+            </div>
+        `).join('');
+    }
+}
+
+function openOrderPanel() {
+    renderOrderPanel();
+    orderOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeOrderPanel() {
+    orderOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function addToCart(id, name, price) {
+    if (cart[id]) {
+        cart[id].qty++;
+    } else {
+        cart[id] = { name, price, qty: 1 };
+    }
+    updateBadge();
+}
+
+// Open panel
+cartBtn.addEventListener('click', openOrderPanel);
+
+// Close panel
+orderClose.addEventListener('click', closeOrderPanel);
+
+// Click backdrop to close
+orderOverlay.addEventListener('click', e => {
+    if (e.target === orderOverlay) closeOrderPanel();
+});
+
+// Quantity and remove buttons (event delegation)
+orderItems.addEventListener('click', e => {
+    const qtyBtn    = e.target.closest('.qty-btn');
+    const removeBtn = e.target.closest('.order-item-remove');
+
+    if (qtyBtn) {
+        const id    = qtyBtn.dataset.id;
+        const delta = parseInt(qtyBtn.dataset.delta, 10);
+        cart[id].qty += delta;
+        if (cart[id].qty <= 0) delete cart[id];
+        updateBadge();
+        renderOrderPanel();
+    }
+
+    if (removeBtn) {
+        const id = removeBtn.dataset.id;
+        delete cart[id];
+        updateBadge();
+        renderOrderPanel();
+    }
+});
+
+// Add to Order buttons
+document.querySelectorAll('.btn-order').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id    = btn.dataset.dishId;
+        const name  = btn.dataset.dishName;
+        const price = parseInt(btn.dataset.dishPrice, 10);
+
+        addToCart(id, name, price);
+
+        // "Added ✓" feedback for 1.5 s
+        const savedHTML = btn.innerHTML;
+        btn.classList.add('added');
+        btn.innerHTML = '<span class="btn-icon">&#10003;</span> Added';
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.innerHTML = savedHTML;
+            btn.classList.remove('added');
+            btn.disabled = false;
+        }, 1500);
+    });
+});
+
+// Place Order
+placeOrderBtn.addEventListener('click', () => {
+    orderConfirm.classList.add('active');
+    setTimeout(() => {
+        Object.keys(cart).forEach(k => delete cart[k]);
+        updateBadge();
+        orderConfirm.classList.remove('active');
+        closeOrderPanel();
+    }, 2500);
 });
