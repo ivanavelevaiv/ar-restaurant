@@ -432,8 +432,54 @@ The prune-only pass confirmed no dangling assets remained after optimize.
 ### Files Changed
 | File | Change |
 |---|---|
-| `models/stekdone1-fixed.glb` | New — cleaned, optimized model |
-| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` now points to `stekdone1-fixed.glb` |
+| `models/stekdone1-fixed.glb` | New — cleaned, optimized model (removed in Step 16) |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` now points to `stekdone1-fixed.glb` (updated in Step 16) |
+
+---
+
+## Step 16 — Steak Model Reset and Re-Optimized as steak-final.glb
+**Date:** 2026-06-14
+**Phase:** Asset / AR
+
+### Summary
+`stekdone1-fixed.glb` was found to be missing from the working tree (tracked by git but deleted from disk). Removed it from git tracking, ran a fresh optimization from the original `stekdone1.glb`, and output the result as `steak-final.glb`. Also added per-dish camera framing support via a new `CAMERA_MAP` in `ar-viewer.html`.
+
+### Optimization
+```bash
+npx @gltf-transform/cli optimize models/stekdone1.glb models/steak-final.glb --texture-size 1024 --compress false
+```
+
+| File | Size |
+|---|---|
+| `stekdone1.glb` (original, kept as backup) | 97.46 MB |
+| `steak-final.glb` (optimized) | 14.04 MB |
+
+### Bounding Box (from `gltf-transform inspect`)
+- bboxMin: `−10.23, −27.10, −13.28`
+- bboxMax: `+13.47, +13.04, +10.42`
+- Footprint: ~24 × 24 units (square plate), mass centered ~7 units below Y origin
+
+### Meshes confirmed present
+wooden-plate, FlorenceSteak_Model_3, frenchFries, tomatoes (Toma1 ×3), broccoli (capusta ×2), plus structural objects — all 9 meshes with materials and textures fully embedded.
+
+### Camera Settings Added (`ar-viewer.html`)
+Added `CAMERA_MAP` for per-dish camera overrides. Falls back to global defaults when a slug has no entry:
+
+```js
+const CAMERA_MAP = {
+    'steak-salad': { orbit: '0deg 65deg auto', fov: '35deg' },
+};
+```
+
+65° phi (slightly more overhead than the 70° default) and 35° FOV (slightly wider) chosen based on the ~24×24 unit square plate footprint.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/stekdone1-fixed.glb` | Removed from git tracking (was missing from disk) |
+| `models/steak-final.glb` | New — clean optimized model from fresh run |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-final.glb` |
+| `ar-viewer.html` — `CAMERA_MAP` | New — per-dish camera orbit/FOV overrides |
 
 ---
 

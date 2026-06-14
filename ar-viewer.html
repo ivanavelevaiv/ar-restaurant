@@ -254,7 +254,7 @@
         // Key  : the ?dish= slug in the URL
         // Value: relative path to the .glb
         const MODEL_MAP = {
-            'steak-salad': 'models/stekdone1-fixed.glb',
+            'steak-salad': 'models/steak-final.glb',
             'shrimp-pasta': 'models/pasta-update.glb',
         };
 
@@ -262,6 +262,14 @@
         // Add an entry here whenever a dish has a real photo.
         const POSTER_MAP = {
             'shrimp-pasta': 'images/second_dish.jpg',
+        };
+
+        // ── Per-dish camera overrides ─────────────────────────────────────
+        // orbit: theta (horizontal) phi (vertical-from-top) radius
+        // fov: field of view (lower = telephoto, higher = wider)
+        // Falls back to the defaults below when a slug has no entry.
+        const CAMERA_MAP = {
+            'steak-salad': { orbit: '0deg 65deg auto', fov: '35deg' },
         };
 
         const slug      = new URLSearchParams(window.location.search).get('dish');
@@ -304,11 +312,12 @@
             mv.setAttribute('interaction-prompt-style', 'basic');
 
             // ── Camera framing ────────────────────────────────────────────
+            // Per-dish overrides from CAMERA_MAP; falls back to shared defaults.
             // camera-orbit: theta (horizontal) phi (vertical from top) radius
             // 70° phi = slightly elevated, like looking at food on a table
-            // Adjust these if the model appears too far away or clipped.
-            mv.setAttribute('camera-orbit', '0deg 70deg auto');
-            mv.setAttribute('field-of-view', '30deg');           // gentle telephoto framing
+            const cam = CAMERA_MAP[slug] || {};
+            mv.setAttribute('camera-orbit', cam.orbit || '0deg 70deg auto');
+            mv.setAttribute('field-of-view', cam.fov   || '30deg');
 
             // ── Lighting & PBR environment ────────────────────────────────
             // 'neutral' provides consistent PBR shading without a scene-specific HDR
