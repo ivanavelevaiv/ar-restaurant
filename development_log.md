@@ -537,6 +537,28 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 20 — Add Wagyu Steak Dish Preview Image
+**Date:** 2026-06-14  
+**Phase:** Content / UI
+
+### Summary
+Added a real dish photo (`wagyu-steak-003.webp`) for the first dish card (Wagyu Steak). Previously dish 1 showed a generic SVG plate placeholder; it now displays the actual food photo, matching the treatment already applied to dish 2 (Creamy Garlic Shrimp Pasta).
+
+### Changes
+
+| File | Change |
+|---|---|
+| `images/wagyu-steak-003.webp` | New — dish photo copied into project |
+| `index.html` — dish 1 card | Replaced `<div class="image-placeholder">…</div>` with `<img src="images/wagyu-steak-003.webp" alt="Wagyu Steak" class="card-img" />` |
+| `ar-viewer.html` — `POSTER_MAP` | Added `'steak-salad': 'images/wagyu-steak-003.webp'` so the photo shows while the 3D model loads |
+| `styles.css` — `.card-img` | Fixed from letterbox (`max-width/height: auto`) to cover fill (`width/height: 100%; object-fit: cover; object-position: center`) — applied to all dish images |
+
+### Notes
+- The `.card-img` CSS fix also improves how the second dish photo (Shrimp Pasta) is cropped; previously it may have been letterboxed instead of filling the slot.
+- The poster image in `ar-viewer.html` is displayed by `<model-viewer>` until the `.glb` file finishes downloading, improving perceived load time.
+
+---
+
 ## Step 18 — Fix Steak AR: Root Cause Found and Eliminated
 **Date:** 2026-06-14
 **Phase:** AR / Bug Fix
