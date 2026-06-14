@@ -455,3 +455,25 @@ Renamed the first dish from "Black Truffle Risotto" to "Wagyu Steak" and updated
 ### Notes
 - No other references to "Black Truffle Risotto" existed elsewhere in `index.html` (no aria labels, breadcrumbs, or data attributes used the old name).
 - The AR slug (`steak-salad`) and 3D model (`stekdone1-fixed.glb`) assigned in Steps 11–12 already match this dish.
+
+---
+
+## Step 14 — Wagyu Steak Nutritional Values Updated
+**Date:** 2026-06-14
+**Phase:** Content
+
+### Summary
+Updated the nutritional data for the first dish in `script.js` to match the Wagyu Steak. The modal structure and styling were not changed.
+
+### Data Changes (`script.js` — dish index 0)
+| Field | Old value | New value |
+|---|---|---|
+| Name | Black Truffle Risotto | Wagyu Steak |
+| Calories | 680 kcal | 780 kcal |
+| Protein | 18g | 52g |
+| Carbs | 89g | 48g |
+| Fat | 24g | 42g |
+| Allergens | Dairy, Gluten | Gluten (wheat/fries), Dairy (demi-glace) |
+
+### Full Nutrition Reference (not yet rendered in modal)
+Serving 450g · Total Fat 42g (54% DV) · Sat. Fat 16g (80% DV) · Total Carbs 48g (17% DV) · Net Carbs 43g · Fiber 5g (18% DV) · Sugars 6g · Protein 52g (104% DV) · Cholesterol 165mg (55% DV) · Sodium 680mg (30% DV) · Vitamin A 210mcg (23% DV) · Vitamin C 38mg (42% DV) · Calcium 60mg (6% DV) · Iron 5.2mg (29% DV)

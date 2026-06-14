@@ -1,11 +1,11 @@
 const dishData = [
     {
-        name: "Black Truffle Risotto",
-        calories: 680,
-        protein: 18,
-        carbs: 89,
-        fat: 24,
-        allergens: ["Dairy", "Gluten"]
+        name: "Wagyu Steak",
+        calories: 780,
+        protein: 52,
+        carbs: 48,
+        fat: 42,
+        allergens: ["Gluten (wheat/fries)", "Dairy (demi-glace)"]
     },
     {
         name: "Creamy Garlic Shrimp Pasta",
