@@ -434,3 +434,24 @@ The prune-only pass confirmed no dangling assets remained after optimize.
 |---|---|
 | `models/stekdone1-fixed.glb` | New — cleaned, optimized model |
 | `ar-viewer.html` — `MODEL_MAP` | `steak-salad` now points to `stekdone1-fixed.glb` |
+
+---
+
+## Step 13 — First Dish Renamed to Wagyu Steak
+**Date:** 2026-06-14
+**Phase:** Content
+
+### Summary
+Renamed the first dish from "Black Truffle Risotto" to "Wagyu Steak" and updated its category label and description. No styling, classes, structure, or other dishes were changed.
+
+### Card Changes (`index.html`)
+| Field | Old value | New value |
+|---|---|---|
+| Category label | `RISOTTO` | `PRIME CUT` |
+| Dish name line 1 | `Black Truffle` | `Wagyu` |
+| Dish name line 2 (italic) | `Risotto` | `Steak` |
+| Description | Aged Arborio, shaved black truffle… | Prime Wagyu beef, golden twice-cooked fries, tender-crisp broccoli florets, and roasted cherry tomatoes with a rich demi-glace. |
+
+### Notes
+- No other references to "Black Truffle Risotto" existed elsewhere in `index.html` (no aria labels, breadcrumbs, or data attributes used the old name).
+- The AR slug (`steak-salad`) and 3D model (`stekdone1-fixed.glb`) assigned in Steps 11–12 already match this dish.
