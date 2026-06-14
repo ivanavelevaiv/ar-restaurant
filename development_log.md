@@ -477,3 +477,28 @@ Updated the nutritional data for the first dish in `script.js` to match the Wagy
 
 ### Full Nutrition Reference (not yet rendered in modal)
 Serving 450g · Total Fat 42g (54% DV) · Sat. Fat 16g (80% DV) · Total Carbs 48g (17% DV) · Net Carbs 43g · Fiber 5g (18% DV) · Sugars 6g · Protein 52g (104% DV) · Cholesterol 165mg (55% DV) · Sodium 680mg (30% DV) · Vitamin A 210mcg (23% DV) · Vitamin C 38mg (42% DV) · Calcium 60mg (6% DV) · Iron 5.2mg (29% DV)
+
+---
+
+## Step 15 — Fix Allergen Tags Layout in Nutrition Modal
+**Date:** 2026-06-14
+**Phase:** UI / Bug Fix
+
+### Problem
+Allergen tags in the nutrition modal were stacking vertically instead of sitting inline side by side. This affected all three dishes.
+
+### Root Cause
+`.allergens-list` already had `display: flex; flex-wrap: wrap; gap: 0.5rem` — the container was correct. `.allergen-tag` was missing an explicit `display` property, which caused inconsistent rendering across browsers (flex children without an explicit display can be treated as block-level in some engines).
+
+### Fix (`styles.css`)
+Added `display: inline-flex; align-items: center;` to `.allergen-tag`:
+
+```css
+.allergen-tag {
+    display: inline-flex;
+    align-items: center;
+    /* existing padding, border, color unchanged */
+}
+```
+
+No changes to `index.html` or `script.js` — the fix is purely in CSS and applies to all dishes automatically.
