@@ -537,6 +537,20 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 21 — Update Wagyu Steak Price
+**Date:** 2026-06-14  
+**Phase:** Content
+
+### Summary
+Updated the display price of the first dish (Wagyu Steak) from $32 to $65 in `index.html`.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` — dish 1 card | `<span class="dish-price">$32</span>` → `$65` |
+
+---
+
 ## Step 20 — Add Wagyu Steak Dish Preview Image
 **Date:** 2026-06-14  
 **Phase:** Content / UI
