@@ -370,3 +370,22 @@ Changed `.card-img` in `styles.css` to `object-fit: contain` so the full dish ph
 ```
 
 The model-viewer poster was unaffected — model-viewer renders posters with contain behaviour by default and already has `background-color: var(--bg)` set.
+
+---
+
+## Step 11 — First Dish AR Model Added (Steak Salad)
+**Date:** 2026-06-14
+**Phase:** Asset / AR
+
+### Summary
+Added `stekdone1.glb` (97 MB) as the 3D AR model for the first dish. Updated the AR link slug from the legacy numeric `?dish=0` to the human-readable `?dish=steak-salad`.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/stekdone1.glb` | New — 3D model for the first dish AR view |
+| `ar-viewer.html` — `MODEL_MAP` | Added `'steak-salad': 'models/stekdone1.glb'` |
+| `index.html` — Dish 1 AR link | Changed `href` from `ar-viewer.html?dish=0` to `ar-viewer.html?dish=steak-salad` |
+
+### Slug Change
+The first dish previously used a numeric index (`?dish=0`) which would fall through `MODEL_MAP` and show the "coming soon" overlay. It now uses the slug `steak-salad` consistent with the slug-based routing introduced in Step 5.
