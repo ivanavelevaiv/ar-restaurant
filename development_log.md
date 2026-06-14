@@ -531,9 +531,63 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 ### Files Changed
 | File | Change |
 |---|---|
-| `models/steak-v2.glb` | New — re-optimized from steak-final.glb |
-| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-v2.glb` |
+| `models/steak-v2.glb` | New — re-optimized from steak-final.glb (superseded by steak-v3.glb in Step 18) |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-v2.glb` (updated to steak-v3.glb in Step 18) |
 | `ar-viewer.html` — `CAMERA_MAP` | Extended with zoom limits, target, and bounds for steak-salad |
+
+---
+
+## Step 18 — Fix Steak AR: Root Cause Found and Eliminated
+**Date:** 2026-06-14
+**Phase:** AR / Bug Fix
+
+### Root Cause (confirmed by evidence)
+
+Inspected the GLB JSON of steak-v2.glb directly. Key findings:
+
+**`EXT_mesh_gpu_instancing` on nodes 2–8 (fries, tomatoes, broccoli):**
+All these nodes had their transforms stored only in GPU instance accessor arrays — not on the nodes themselves. iOS Quick Look ignores `EXT_mesh_gpu_instancing` (not supported). When the extension is ignored, these nodes render with no transform at all (wrong position/scale) or are skipped.
+
+**Plate and steak (nodes 0–1) rendered microscopic:**
+The `optimize` pipeline runs `instance` BEFORE `flatten`. The `instance` step captured the transforms of fries/tomato/broccoli nodes into GPU instance arrays. Then `flatten` baked the parent scale (0.00434× unit conversion) into nodes 0 and 1 (plate, steak) as node-level scales. At 0.4% of correct size, plate and steak are physically invisible.
+
+**Original model's architecture:** `stekdone1.glb` has 90 nodes and 40 meshes — one plate, one steak, 19 fries clusters, 5 tomatoes (×4 sub-meshes), 8 broccoli (×2 sub-meshes). Each positioned via parent node transforms. Extensions used in original: **only `KHR_materials_unlit`** — no GPU instancing at all.
+
+The entire `EXT_mesh_gpu_instancing` problem was **introduced by the optimization pipeline**, not present in the source model.
+
+### Fix
+
+Rebuilt from `stekdone1.glb` using individual passes with `flatten` FIRST, and NO `instance` step:
+
+```bash
+npx @gltf-transform/cli flatten  stekdone1.glb  steak-v3.glb   # bake all node transforms consistently
+npx @gltf-transform/cli dedup    steak-v3.glb   steak-v3.glb   # remove duplicate buffers
+npx @gltf-transform/cli join     steak-v3.glb   steak-v3.glb   # merge compatible primitives
+npx @gltf-transform/cli weld     steak-v3.glb   steak-v3.glb   # weld near-duplicate vertices
+npx @gltf-transform/cli simplify steak-v3.glb   steak-v3.glb   # reduce poly count
+npx @gltf-transform/cli prune    steak-v3.glb   steak-v3.glb   # remove unused assets
+npx @gltf-transform/cli resize   --width 1024 --height 1024 steak-v3.glb steak-v3.glb
+npx @gltf-transform/cli webp     --quality 80  steak-v3.glb   steak-v3.glb
+npx @gltf-transform/cli simplify --error 0.01  steak-v3.glb   steak-v3.glb
+```
+
+`flatten` applied ALL parent node transforms uniformly before any merging. No `instance` step means no `EXT_mesh_gpu_instancing` added.
+
+### Result
+
+| File | Size | Nodes | Meshes | GPU instances | Extensions |
+|---|---|---|---|---|---|
+| `stekdone1.glb` (original) | 97.46 MB | 90 | 40 | 0 | KHR_materials_unlit |
+| `steak-v2.glb` (broken) | 13.64 MB | 9 | 9 | 7 | **EXT_mesh_gpu_instancing**, KHR_materials_unlit |
+| `steak-v3.glb` (fixed) | **13.04 MB** | 6 | 5 | **0** | EXT_texture_webp, KHR_materials_unlit |
+
+`EXT_texture_webp` is in `extensionsUsed` (not required). Viewers that support WebP (iOS 14+, all modern Android, model-viewer) get compressed textures; older viewers fall back gracefully.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/steak-v3.glb` | New — correctly rebuilt, no GPU instancing, 13 MB |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-v3.glb` |
 
 ---
 
