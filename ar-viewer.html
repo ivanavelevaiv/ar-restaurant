@@ -254,7 +254,7 @@
         // Key  : the ?dish= slug in the URL
         // Value: relative path to the .glb
         const MODEL_MAP = {
-            'steak-salad': 'models/steak-final.glb',
+            'steak-salad': 'models/steak-v2.glb',
             'shrimp-pasta': 'models/pasta-update.glb',
         };
 
@@ -265,11 +265,22 @@
         };
 
         // ── Per-dish camera overrides ─────────────────────────────────────
-        // orbit: theta (horizontal) phi (vertical-from-top) radius
-        // fov: field of view (lower = telephoto, higher = wider)
-        // Falls back to the defaults below when a slug has no entry.
+        // orbit    : camera-orbit (theta / phi / radius)
+        // fov      : field-of-view
+        // minOrbit : min-camera-orbit (closest the user can pinch-zoom)
+        // maxOrbit : max-camera-orbit (furthest the user can pull back)
+        // target   : camera-target (world-space point the camera looks at)
+        // bounds   : 'tight' fits camera to actual mesh bounds, not loose AABB
+        // Falls back to the shared defaults when a slug has no entry.
         const CAMERA_MAP = {
-            'steak-salad': { orbit: '0deg 65deg auto', fov: '35deg' },
+            'steak-salad': {
+                orbit:    '0deg 75deg 1.5m',
+                minOrbit: 'auto auto 0.5m',
+                maxOrbit: 'auto auto 3m',
+                fov:      '30deg',
+                target:   '0m 0m 0m',
+                bounds:   'tight',
+            },
         };
 
         const slug      = new URLSearchParams(window.location.search).get('dish');
@@ -316,8 +327,12 @@
             // camera-orbit: theta (horizontal) phi (vertical from top) radius
             // 70° phi = slightly elevated, like looking at food on a table
             const cam = CAMERA_MAP[slug] || {};
-            mv.setAttribute('camera-orbit', cam.orbit || '0deg 70deg auto');
-            mv.setAttribute('field-of-view', cam.fov   || '30deg');
+            mv.setAttribute('camera-orbit', cam.orbit    || '0deg 70deg auto');
+            mv.setAttribute('field-of-view', cam.fov     || '30deg');
+            if (cam.minOrbit) mv.setAttribute('min-camera-orbit', cam.minOrbit);
+            if (cam.maxOrbit) mv.setAttribute('max-camera-orbit', cam.maxOrbit);
+            if (cam.target)   mv.setAttribute('camera-target',    cam.target);
+            if (cam.bounds)   mv.setAttribute('bounds',           cam.bounds);
 
             // ── Lighting & PBR environment ────────────────────────────────
             // 'neutral' provides consistent PBR shading without a scene-specific HDR

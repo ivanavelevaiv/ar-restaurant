@@ -477,9 +477,63 @@ const CAMERA_MAP = {
 | File | Change |
 |---|---|
 | `models/stekdone1-fixed.glb` | Removed from git tracking (was missing from disk) |
-| `models/steak-final.glb` | New — clean optimized model from fresh run |
-| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-final.glb` |
-| `ar-viewer.html` — `CAMERA_MAP` | New — per-dish camera orbit/FOV overrides |
+| `models/steak-final.glb` | New — clean optimized model from fresh run (superseded by steak-v2.glb in Step 17) |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-final.glb` (updated to steak-v2.glb in Step 17) |
+| `ar-viewer.html` — `CAMERA_MAP` | New — per-dish camera orbit/FOV overrides (extended in Step 17) |
+
+---
+
+## Step 17 — Fix Steak AR Camera and Missing Parts
+**Date:** 2026-06-14
+**Phase:** AR / Bug Fix
+
+### Problem 1 — Model too small, zoom range too restrictive
+The default `camera-orbit: 0deg 65deg auto` left too much empty space. Users couldn't pinch-zoom close enough to inspect the dish.
+
+### Problem 2 — Only fries visible in real AR mode
+When entering native AR (iOS Quick Look / Android Scene Viewer), only the french fries mesh rendered — plate, steak, broccoli, and cherry tomatoes were invisible.
+
+**Root cause investigation:** All 9 meshes are present and properly embedded in the GLB. The model uses two non-universal extensions:
+- `KHR_materials_unlit` — unlit shading on some parts; AR viewers that don't support this may skip or mis-render those materials
+- `EXT_mesh_gpu_instancing` — cherry tomatoes (×3) and broccoli (×2) may be expressed as GPU instances; iOS Quick Look and some Scene Viewer builds don't support this extension, causing instanced meshes to be invisible
+
+### Fix 1 — Camera (`ar-viewer.html` `CAMERA_MAP`)
+Extended the `steak-salad` camera entry with zoom limits, a target point, and tight bounds:
+
+```js
+'steak-salad': {
+    orbit:    '0deg 75deg 1.5m',   // closer default distance
+    minOrbit: 'auto auto 0.5m',    // allow pinch-zoom to 0.5 m
+    maxOrbit: 'auto auto 3m',      // max pull-back
+    fov:      '30deg',             // telephoto to fill the frame
+    target:   '0m 0m 0m',         // look at scene origin
+    bounds:   'tight',             // fit camera to actual mesh, not loose AABB
+},
+```
+
+Added conditional attribute application in the model-viewer setup so `min-camera-orbit`, `max-camera-orbit`, `camera-target`, and `bounds` are only set when a dish has them defined.
+
+### Fix 2 — Model re-optimized as steak-v2.glb
+```bash
+npx @gltf-transform/cli optimize models/steak-final.glb models/steak-v2.glb --texture-size 1024 --compress false
+npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
+```
+
+| File | Size |
+|---|---|
+| `steak-final.glb` | 14.04 MB |
+| `steak-v2.glb` | 13.64 MB |
+
+**Mesh count:** 9 meshes — wooden-plate, FlorenceSteak_Model_3, fries (Object_0.005), tomatoes (Object_1/2/3), broccoli (Object_0.011/1.005), structural (Object_0.006). All materials and textures confirmed embedded.
+
+**Remaining concern:** `EXT_mesh_gpu_instancing` is still present in `extensionsUsed`. If AR parts remain missing after this fix, the next step is to regenerate from `stekdone1.glb` using individual gltf-transform passes that skip the `instance` step (which adds this extension).
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/steak-v2.glb` | New — re-optimized from steak-final.glb |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `models/steak-v2.glb` |
+| `ar-viewer.html` — `CAMERA_MAP` | Extended with zoom limits, target, and bounds for steak-salad |
 
 ---
 
