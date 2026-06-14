@@ -537,6 +537,20 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 22 — Remove Poster Flash from AR Viewer
+**Date:** 2026-06-14  
+**Phase:** UI / Bug Fix
+
+### Summary
+The `poster` attribute on `<model-viewer>` was causing the dish photo to flash briefly on screen before the 3D model rendered in the AR viewer. Removed the poster entirely from `ar-viewer.html` so the viewer shows only the dark loading background and spinner while the GLB downloads. Poster images remain in use on the menu cards in `index.html`.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `ar-viewer.html` | Removed `POSTER_MAP` object and the `mv.setAttribute('poster', …)` line |
+
+---
+
 ## Step 21 — Update Wagyu Steak Price
 **Date:** 2026-06-14  
 **Phase:** Content

@@ -258,12 +258,6 @@
             'shrimp-pasta': 'models/pasta-update.glb',
         };
 
-        // ── Poster images (shown while the 3D model loads) ────────────────
-        // Add an entry here whenever a dish has a real photo.
-        const POSTER_MAP = {
-            'steak-salad':  'images/wagyu-steak-003.webp',
-            'shrimp-pasta': 'images/second_dish.jpg',
-        };
 
         // ── Per-dish camera overrides ─────────────────────────────────────
         // orbit    : camera-orbit (theta / phi / radius)
@@ -312,8 +306,6 @@
             mv.setAttribute('alt', '3D model of the dish');
             mv.setAttribute('loading', 'eager');
             mv.setAttribute('reveal', 'auto');   // show model as soon as it's ready
-            // Poster: real dish photo shown while the GLB is downloading
-            if (POSTER_MAP[slug]) mv.setAttribute('poster', POSTER_MAP[slug]);
 
             // ── Orbit controls & turntable ────────────────────────────────
             mv.setAttribute('camera-controls', '');
