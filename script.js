@@ -186,6 +186,21 @@ function addToCart(id, name, price) {
     updateBadge();
 }
 
+function updateAllCardButtons() {
+    document.querySelectorAll('.btn-order').forEach(btn => {
+        if (btn.disabled) return; // don't interrupt the "Added ✓" flash
+        const id  = btn.dataset.dishId;
+        const qty = cart[id] ? cart[id].qty : 0;
+        if (qty > 0) {
+            btn.innerHTML = `<span class="btn-icon">+</span> Add Another &middot; ${qty} in order`;
+            btn.classList.add('btn-order--in-cart');
+        } else {
+            btn.innerHTML = '<span class="btn-icon">+</span> Add to Order';
+            btn.classList.remove('btn-order--in-cart');
+        }
+    });
+}
+
 // Open panel
 cartBtn.addEventListener('click', openOrderPanel);
 
@@ -209,6 +224,7 @@ orderItems.addEventListener('click', e => {
         if (cart[id].qty <= 0) delete cart[id];
         updateBadge();
         renderOrderPanel();
+        updateAllCardButtons();
     }
 
     if (removeBtn) {
@@ -216,6 +232,7 @@ orderItems.addEventListener('click', e => {
         delete cart[id];
         updateBadge();
         renderOrderPanel();
+        updateAllCardButtons();
     }
 });
 
@@ -228,15 +245,15 @@ document.querySelectorAll('.btn-order').forEach(btn => {
 
         addToCart(id, name, price);
 
-        // "Added ✓" feedback for 1.5 s
-        const savedHTML = btn.innerHTML;
+        // "Added ✓" flash for 1.5 s, then settle into cart-aware state
         btn.classList.add('added');
+        btn.classList.remove('btn-order--in-cart');
         btn.innerHTML = '&#10003; Added';
         btn.disabled = true;
         setTimeout(() => {
-            btn.innerHTML = savedHTML;
-            btn.classList.remove('added');
             btn.disabled = false;
+            btn.classList.remove('added');
+            updateAllCardButtons();
         }, 1500);
     });
 });
@@ -247,6 +264,7 @@ placeOrderBtn.addEventListener('click', () => {
     setTimeout(() => {
         Object.keys(cart).forEach(k => delete cart[k]);
         updateBadge();
+        updateAllCardButtons();
         orderConfirm.classList.remove('active');
         closeOrderPanel();
     }, 2500);

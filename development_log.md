@@ -537,6 +537,48 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 26 — Smart Add to Order Button — Cart-Aware State
+**Date:** 2026-06-15  
+**Phase:** Feature / UI
+
+### Summary
+The "Add to Order" button on each dish card now reflects the live cart state for that specific dish. When a dish has items in the cart, the button switches to a filled gold style and shows the current quantity.
+
+### Button States
+
+| State | Condition | Appearance | Label |
+|---|---|---|---|
+| Default | 0 items in cart | Dark bg, gold outline | `+ Add to Order` |
+| Flash | Just clicked (1.5 s) | `.added` tint | `✓ Added` |
+| In-cart | 1+ items in cart | Solid gold bg, dark text | `+ Add Another · N in order` |
+
+### Implementation (`script.js`)
+
+**`updateAllCardButtons()`** — new function that iterates all `.btn-order` buttons, reads `cart[dishId].qty`, and sets innerHTML + class accordingly. Skips any button currently in the 1.5 s flash state (`btn.disabled`).
+
+Called after every cart mutation:
+- After the "Added ✓" flash timeout (replaces `savedHTML` restore)
+- After qty `−`/`+` in the order panel
+- After remove (✕) in the order panel  
+- After "Place Order" clears the cart
+
+**Add to Order click handler** — no longer saves/restores `savedHTML`. After the flash, calls `updateAllCardButtons()` so the button settles into the correct in-cart state.
+
+### CSS (`styles.css`)
+
+`.btn-order--in-cart` — solid gold fill:
+- `background: var(--gold)` / `color: var(--bg)` (dark text on gold)
+- `font-weight: 700`
+- Hover: `var(--gold-bright)` + subtle glow
+
+### Files Changed
+| File | Change |
+|---|---|
+| `script.js` | `updateAllCardButtons()` function; call it after every cart change; updated click handler |
+| `styles.css` | `.btn-order--in-cart` and `.btn-order--in-cart:hover` rules |
+
+---
+
 ## Step 25 — Fix Flipped Checkmark on Add to Order Confirmation
 **Date:** 2026-06-15  
 **Phase:** UI / Bug Fix

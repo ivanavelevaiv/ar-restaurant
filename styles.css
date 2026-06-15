@@ -921,6 +921,24 @@ body {
     cursor: default;
 }
 
+.btn-order--in-cart {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    font-weight: 700;
+}
+
+.btn-order--in-cart .btn-icon {
+    color: var(--bg);
+}
+
+.btn-order--in-cart:hover {
+    background: var(--gold-bright);
+    border-color: var(--gold-bright);
+    box-shadow: 0 0 22px rgba(201, 168, 76, 0.22);
+    color: var(--bg);
+}
+
 /* ── Order overlay ── */
 .order-overlay {
     position: fixed;
