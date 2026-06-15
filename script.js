@@ -5,7 +5,7 @@ const dishData = [
         protein: 52,
         carbs: 48,
         fat: 42,
-        allergens: ["Gluten (wheat/fries)", "Dairy (demi-glace)"]
+        allergens: ["Gluten (wheat)", "Dairy"]
     },
     {
         name: "Creamy Garlic Shrimp Pasta",

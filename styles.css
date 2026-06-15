@@ -799,6 +799,7 @@ body {
 .allergen-tag {
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
     font-size: 0.6rem;
     letter-spacing: 0.1em;
     font-weight: 600;

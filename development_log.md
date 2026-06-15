@@ -537,6 +537,28 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 28 — Fix Allergen Tags — Consistent Inline Layout Across All Modals
+**Date:** 2026-06-15  
+**Phase:** UI / Bug Fix
+
+### Root Cause
+All three dishes use identical JS render logic and CSS classes for allergen tags — there was no structural difference. The visual inconsistency was caused by content length: dish 1's allergen labels (`"Gluten (wheat/fries)"`, `"Dairy (demi-glace)"`) were wide enough that the two tags couldn't fit side by side inside the modal content area, causing flex-wrap to stack them vertically. Dishes 2 and 3 had shorter labels that fit in one row.
+
+### Fix
+Two changes:
+1. **`script.js`** — Shortened dish 1 allergen strings to match the concise style of dishes 2 and 3: `"Gluten (wheat/fries)"` → `"Gluten (wheat)"`, `"Dairy (demi-glace)"` → `"Dairy"`.
+2. **`styles.css`** — Added `white-space: nowrap` to `.allergen-tag` so text inside a tag is always one line (prevents any future long label from breaking mid-tag).
+
+The existing `display: flex; flex-wrap: wrap; gap: 0.5rem` on `.allergens-list` was already correct.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `script.js` | Dish 1 allergens shortened to `["Gluten (wheat)", "Dairy"]` |
+| `styles.css` | `.allergen-tag` — added `white-space: nowrap` |
+
+---
+
 ## Step 27 — Fix Button Vertical Alignment Across Dish Cards
 **Date:** 2026-06-15  
 **Phase:** UI / Layout Fix
