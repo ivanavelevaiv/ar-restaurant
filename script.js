@@ -192,7 +192,7 @@ function updateAllCardButtons() {
         const id  = btn.dataset.dishId;
         const qty = cart[id] ? cart[id].qty : 0;
         if (qty > 0) {
-            btn.innerHTML = `<span class="btn-icon">+</span> Add Another &middot; ${qty} in order`;
+            btn.innerHTML = '<span class="btn-icon">+</span> Add Another';
             btn.classList.add('btn-order--in-cart');
         } else {
             btn.innerHTML = '<span class="btn-icon">+</span> Add to Order';
