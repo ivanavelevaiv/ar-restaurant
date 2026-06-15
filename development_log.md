@@ -537,6 +537,31 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 31 — Match Steak AR Preview Zoom to Shrimp Pasta
+**Date:** 2026-06-16  
+**Phase:** AR / Camera
+
+### Root Cause
+`steak-salad` had a fixed `radius: 1.5m` in its CAMERA_MAP entry. If the steak model's bounding box is physically smaller than 1.5 m implies, model-viewer places the camera too far back and the model appears tiny. `shrimp-pasta` had no CAMERA_MAP entry at all, so it fell back to `radius: auto` — model-viewer auto-fits the camera to the mesh and the model always fills the view.
+
+### Before / After
+
+| Setting | steak-salad before | steak-salad after | shrimp-pasta (unchanged) |
+|---|---|---|---|
+| orbit radius | `1.5m` (fixed) | `auto` | `auto` |
+| minOrbit | `auto auto 0.5m` | — (removed) | — |
+| maxOrbit | `auto auto 3m` | — (removed) | — |
+| fov | `30deg` | `30deg` | `30deg` |
+| target | `0m 0m 0m` | `0m 0m 0m` | — |
+| bounds | `tight` | `tight` | — |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `ar-viewer.html` — `CAMERA_MAP` | steak-salad: orbit radius `1.5m` → `auto`; removed fixed min/maxOrbit |
+
+---
+
 ## Step 30 — Fix Hero Circle Clipped on Mobile — Grid Alignment and Height
 **Date:** 2026-06-16  
 **Phase:** UI / Mobile Fix
