@@ -1267,14 +1267,18 @@ body {
 
     .hero {
         grid-template-columns: 1fr;
-        align-items: flex-end;
+        align-items: flex-start;
+        height: auto;
+        min-height: 0;
         padding: 7rem 1.75rem 4rem;
     }
 
     .hero-right {
         display: flex;
+        justify-content: center;
         margin-top: 2rem;
         padding-bottom: 0.5rem;
+        animation: fadeIn 1.6s var(--ease) 0.8s forwards;
     }
 
     .hero-emblem-wrap {

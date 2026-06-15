@@ -537,6 +537,36 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 30 — Fix Hero Circle Clipped on Mobile — Grid Alignment and Height
+**Date:** 2026-06-16  
+**Phase:** UI / Mobile Fix
+
+### Root Cause
+`overflow: hidden` on `.hero` was clipping `.hero-right` (the emblem) below the visible viewport on mobile. The chain:
+1. `.hero` had `min-height: 100vh` — forces the grid container to at least fill the screen
+2. At ≤960px, `grid-template-columns: 1fr` makes both rows stack vertically
+3. `align-items: flex-end` aligned both rows to the **bottom** of the 100vh container
+4. `.hero-left` content (tall on mobile) + `.hero-right` emblem combined taller than 100vh
+5. `overflow: hidden` clipped `.hero-right` below the visible area — invisible
+
+### Fix (`styles.css` — `@media (max-width: 960px)`)
+
+| Property | Before | After |
+|---|---|---|
+| `.hero` `align-items` | `flex-end` | `flex-start` — rows stack from top, nothing pushed below viewport |
+| `.hero` `min-height` | `100vh` (inherited) | `0` (overridden) with `height: auto` — hero grows to fit content |
+| `.hero-right` `justify-content` | not set | `center` — emblem stays horizontally centered |
+| `.hero-right` `animation` | inherited (unreliable) | explicitly declared — ensures fadeIn fires on mobile |
+
+`overflow: hidden` on `.hero` is kept — the layout fix means nothing overflows now.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `styles.css` | `@media (max-width: 960px)` — `.hero` and `.hero-right` rules updated |
+
+---
+
 ## Step 29 — Fix Hero Circle Emblem Visibility on Mobile
 **Date:** 2026-06-16  
 **Phase:** UI / Mobile Fix
