@@ -537,6 +537,29 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 27 — Fix Button Vertical Alignment Across Dish Cards
+**Date:** 2026-06-15  
+**Phase:** UI / Layout Fix
+
+### Summary
+The three dish card buttons (Nutritional Values, View in AR, Add to Order) were sitting at different vertical positions across the three cards because card body height varied with text content. Fixed by making the card and body use flex column layout, pushing the footer to the bottom with `margin-top: auto`.
+
+### CSS Changes
+
+| Selector | Change | Why |
+|---|---|---|
+| `.dish-card` | `display: flex; flex-direction: column` | Card fills grid cell height (grid already stretches cells equally) |
+| `.card-body` | `flex: 1; display: flex; flex-direction: column` | Body fills all space below the image |
+| `.card-footer` | `margin-top: auto` | Pins button group to the bottom regardless of text above |
+| `.btn` | `min-height: 44px` | Prevents button from resizing when label changes (e.g. "Add to Order" → "Add Another") |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `styles.css` | 4 rule additions as above |
+
+---
+
 ## Step 26 — Smart Add to Order Button — Cart-Aware State
 **Date:** 2026-06-15  
 **Phase:** Feature / UI
