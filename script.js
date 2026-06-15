@@ -231,7 +231,7 @@ document.querySelectorAll('.btn-order').forEach(btn => {
         // "Added ✓" feedback for 1.5 s
         const savedHTML = btn.innerHTML;
         btn.classList.add('added');
-        btn.innerHTML = '<span class="btn-icon">&#10003;</span> Added';
+        btn.innerHTML = '&#10003; Added';
         btn.disabled = true;
         setTimeout(() => {
             btn.innerHTML = savedHTML;

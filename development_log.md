@@ -537,6 +537,26 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 25 — Fix Flipped Checkmark on Add to Order Confirmation
+**Date:** 2026-06-15  
+**Phase:** UI / Bug Fix
+
+### Root Cause
+`.btn-order:hover .btn-icon { transform: scale(1.3) rotate(90deg) }` was rotating the `+` icon on hover. When the user clicked the button, the JS replaced the `+` with `✓` inside the same `.btn-icon` span while the hover state was still active. The `✓` then inherited the ongoing CSS transition back from `rotate(90deg)` to `rotate(0deg)`, causing it to visibly appear rotated or mirrored during the 0.35s transition.
+
+### Fix
+Two changes:
+1. **JS (`script.js`)** — removed `.btn-icon` wrapper from the "Added" state. The checkmark is now plain text (`&#10003; Added`) with no span, so no transform transition can affect it.
+2. **CSS (`styles.css`)** — changed `.btn-order:hover .btn-icon` from `scale(1.3) rotate(90deg)` to `scale(1.2)`. The `+` icon still scales up on hover, but no rotation means no residual transform state to transition away from.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `script.js` | `'<span class="btn-icon">&#10003;</span> Added'` → `'&#10003; Added'` |
+| `styles.css` | `.btn-order:hover .btn-icon` transform: removed `rotate(90deg)` |
+
+---
+
 ## Step 24 — Fix Cart Icon Theme and Move AR Subtitle Under Logo
 **Date:** 2026-06-14  
 **Phase:** UI / Visual Fix
