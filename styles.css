@@ -1271,7 +1271,16 @@ body {
         padding: 7rem 1.75rem 4rem;
     }
 
-    .hero-right { display: none; }
+    .hero-right {
+        display: flex;
+        margin-top: 2rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .hero-emblem-wrap {
+        width: 220px;
+        opacity: 0.4;
+    }
 
     .menu-section { padding: 4rem 1.75rem; }
 
@@ -1286,6 +1295,8 @@ body {
     .hero-title { font-size: clamp(3rem, 14vw, 4.5rem); }
 
     .title-line.italic { padding-left: 1rem; }
+
+    .hero-emblem-wrap { width: 180px; }
 
     .calories-number { font-size: 3.5rem; }
 

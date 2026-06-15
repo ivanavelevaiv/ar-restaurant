@@ -537,6 +537,32 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 29 — Fix Hero Circle Emblem Visibility on Mobile
+**Date:** 2026-06-16  
+**Phase:** UI / Mobile Fix
+
+### Root Cause
+`@media (max-width: 960px)` contained `.hero-right { display: none; }` which hid the entire decorative emblem column on all mobile and tablet viewports.
+
+### Fix
+Replaced `display: none` with a mobile-appropriate treatment:
+
+| Property | Desktop | ≤960px | ≤600px |
+|---|---|---|---|
+| `.hero-right` display | `flex` | `flex` (restored) | — |
+| `.hero-emblem-wrap` width | `min(440px, 44vw)` | `220px` | `180px` |
+| `.hero-emblem-wrap` opacity | `1` | `0.4` | `0.4` |
+| `.hero-right` margin-top | — | `2rem` | — |
+
+The hero already has `overflow: hidden` which prevents the emblem from causing horizontal scroll at any viewport width.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `styles.css` | Replaced `.hero-right { display: none }` with flex + size/opacity overrides; added `hero-emblem-wrap` sizing at 600px |
+
+---
+
 ## Step 28 — Fix Allergen Tags — Consistent Inline Layout Across All Modals
 **Date:** 2026-06-15  
 **Phase:** UI / Bug Fix
