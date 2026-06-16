@@ -16,12 +16,12 @@ const dishData = [
         allergens: ["Shellfish", "Gluten (wheat)", "Dairy"]
     },
     {
-        name: "Nova Scotia Lobster Bisque",
-        calories: 420,
-        protein: 24,
-        carbs: 32,
-        fat: 22,
-        allergens: ["Shellfish", "Dairy"]
+        name: "Wagyu Smash Burger",
+        calories: 920,
+        protein: 48,
+        carbs: 52,
+        fat: 58,
+        allergens: ["Gluten (brioche bun)", "Dairy (aged cheddar)", "Egg (truffle aioli)"]
     }
 ];
 

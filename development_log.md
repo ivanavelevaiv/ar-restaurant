@@ -537,6 +537,42 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 33 — Third Dish Changed to Wagyu Smash Burger
+**Date:** 2026-06-16  
+**Phase:** Content / UI
+
+### Summary
+Replaced the third dish (formerly "Nova Scotia Lobster Bisque") with "Wagyu Smash Burger". Updated all card content — category label, dish name, description, price — and replaced the nutritional values in `script.js` with realistic macro data for the new dish. All existing CSS classes and HTML structure preserved; only textual content changed.
+
+### Card Changes
+| Field | Before | After |
+|---|---|---|
+| Category | BISQUE | SIGNATURE SMASH |
+| Dish name | Nova Scotia / *Lobster Bisque* | Wagyu / *Smash Burger* |
+| Description | Cold-water lobster, cognac cream… | Double smash Wagyu patty, aged cheddar… brioche bun |
+| Price | $28 | $38 |
+| `data-dish-name` | Nova Scotia Lobster Bisque | Wagyu Smash Burger |
+| `data-dish-id` | lobster-bisque | wagyu-smash-burger |
+| `alt` on image | Nova Scotia Lobster Bisque | Wagyu Smash Burger |
+| AR viewer link | `?dish=2` | `?dish=wagyu-smash-burger` |
+
+### Nutritional Values (`script.js` dishData[2])
+| Macro | Before | After |
+|---|---|---|
+| Calories | 420 kcal | 920 kcal |
+| Protein | 24g | 48g |
+| Carbs | 32g | 52g |
+| Fat | 22g | 58g |
+| Allergens | Shellfish, Dairy | Gluten (brioche bun), Dairy (aged cheddar), Egg (truffle aioli) |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` — dish 3 card | Updated category, name, description, price, data attributes, AR link |
+| `script.js` — dishData[2] | Updated name, calories, protein, carbs, fat, allergens |
+
+---
+
 ## Step 32 — Add Third Dish Preview Image
 **Date:** 2026-06-16  
 **Phase:** Content / UI
