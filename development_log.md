@@ -537,6 +537,21 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 32 — Add Third Dish Preview Image
+**Date:** 2026-06-16  
+**Phase:** Content / UI
+
+### Summary
+Added a real dish photo (`images/third.jpg`) for the third dish card (Nova Scotia Lobster Bisque). Replaced the SVG plate placeholder with an `<img class="card-img">` element, matching the treatment of dish 1 and dish 2. CSS `.card-img { object-fit: cover; object-position: center; width/height: 100% }` already applies — no style changes needed.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `images/third.jpg` | New — dish photo added (364 KB) |
+| `index.html` — dish 3 card | Replaced `<div class="image-placeholder">…</div>` with `<img src="images/third.jpg" alt="Nova Scotia Lobster Bisque" class="card-img" />` |
+
+---
+
 ## Step 31 — Match Steak AR Preview Zoom to Shrimp Pasta
 **Date:** 2026-06-16  
 **Phase:** AR / Camera
