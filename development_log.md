@@ -537,6 +537,84 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 35 — Fix Burger AR: Convert KHR_materials_unlit to Standard PBR
+**Date:** 2026-06-16  
+**Phase:** AR / Bug Fix
+
+### Symptom
+When entering native AR mode (iOS Quick Look / Android Scene Viewer), only the plate was visible — the burger, cheese, bacon, and all other parts were invisible. The in-page 3D orbit viewer rendered everything correctly.
+
+### Root Cause (confirmed by `gltf-transform inspect`)
+
+`burger-final.glb` had **2 meshes**:
+- `Plate_post` — standard PBR material (`Plate_PBR`) with baseColor + normal + roughness textures → **visible in AR**
+- `Object_0` — `KHR_materials_unlit` material (`hamburger_Model_13_u1_v1`) with only a JPEG baseColorTexture, and **no NORMAL attribute** (stripped by the prior optimize pass) → **invisible in AR**
+
+iOS Quick Look converts glTF to USDZ internally. Its USDZ converter does not reliably handle `KHR_materials_unlit` materials — they render as invisible/transparent during the USDZ conversion path. This is the same class of failure as the steak broccoli fix (Step 19) where unlit materials dropped in native AR.
+
+The optimize pipeline had also stripped the NORMAL attribute from `Object_0` because normals are unnecessary for unlit rendering. This compounded the issue.
+
+### Fix
+
+**Step 1 — Node.js conversion script (`fix-burger-unlit.cjs`)**
+
+The `@gltf-transform/cli` has no built-in unlit→PBR command, so a script was written to:
+1. Load `burg4.glb` (original — has NORMAL on `Object_0`)
+2. Call `material.setExtension('KHR_materials_unlit', null)` to remove the per-material extension property
+3. Dispose the document-root `KHR_materials_unlit` extension object to remove it from `extensionsUsed`
+4. Set `roughnessFactor=0.9`, `metallicFactor=0.0` for a matte PBR appearance
+5. Write as `burger-v2-raw.glb`
+
+Key finding: `setExtension(name, null)` alone is insufficient — the document-root extension object must also be disposed or the writer still includes `KHR_materials_unlit` in `extensionsUsed`.
+
+**Step 2 — Steak-proven pipeline (no `instance`, no `webp` steps)**
+
+```bash
+npx @gltf-transform/cli flatten   burger-v2-raw.glb  burger-v2.glb
+npx @gltf-transform/cli dedup     burger-v2.glb       burger-v2.glb
+npx @gltf-transform/cli join      burger-v2.glb       burger-v2.glb
+npx @gltf-transform/cli weld      burger-v2.glb       burger-v2.glb
+npx @gltf-transform/cli simplify  burger-v2.glb       burger-v2.glb
+npx @gltf-transform/cli prune     burger-v2.glb       burger-v2.glb
+npx @gltf-transform/cli resize    --width 1024 --height 1024  burger-v2.glb  burger-v2.glb
+npx @gltf-transform/cli jpeg      --quality 80  burger-v2.glb  burger-v2.glb
+npx @gltf-transform/cli simplify  --error 0.01  burger-v2.glb  burger-v2.glb
+```
+
+No `instance` step — avoids `EXT_mesh_gpu_instancing` (invisible in iOS Quick Look).  
+No `webp` step — avoids WebP-only textures on unlit materials (Step 19 lesson, now moot since the material is PBR, but kept as safe practice).
+
+### Result
+
+| File | Size | extensionsUsed | NORMAL on burger | AR visible |
+|---|---|---|---|---|
+| `burger-final.glb` (broken) | 5.29 MB | KHR_materials_unlit | ✗ stripped | ✗ |
+| `burger-v2.glb` (fixed) | 5.1 MB | **none** | ✓ | ✓ (expected) |
+
+```
+burger-v2.glb:
+  extensionsUsed:     none
+  extensionsRequired: none
+  Mesh 0: Plate_post  — NORMAL, POSITION, TEXCOORD_0 — PBR (plate_PBR)
+  Mesh 1: Object_0    — NORMAL, POSITION, TEXCOORD_0 — PBR (hamburger_Model_13_u1_v1)
+  Textures: 3×PNG (plate), 1×JPEG 1024×1024 (burger)
+```
+
+### Rule for Future Dishes
+- Do NOT use the bundled `optimize` command as the sole pipeline step — it runs `instance` (adds `EXT_mesh_gpu_instancing`) and may introduce other iOS-incompatible extensions.
+- Any mesh using `KHR_materials_unlit` will be **invisible in iOS Quick Look AR** — convert to standard PBR before exporting (use `fix-burger-unlit.cjs` as a template).
+- Safe pipeline: `flatten → dedup → join → weld → simplify → prune → resize → jpeg` (no `instance`, no `webp`).
+
+### Files Changed
+| File | Change |
+|---|---|
+| `fix-burger-unlit.cjs` | New — Node.js script to convert KHR_materials_unlit to standard PBR |
+| `models/burger-v2-raw.glb` | New — PBR-converted intermediate (before optimization) |
+| `models/burger-v2.glb` | New — final optimized AR model (5.1 MB, no problematic extensions) |
+| `ar-viewer.html` — `MODEL_MAP` | `smash-burger` updated from `burger-final.glb` → `burger-v2.glb` |
+
+---
+
 ## Step 34 — Third Dish AR Model Added (Wagyu Smash Burger)
 **Date:** 2026-06-16  
 **Phase:** AR / Asset
