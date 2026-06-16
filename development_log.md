@@ -537,6 +537,40 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 34 — Third Dish AR Model Added (Wagyu Smash Burger)
+**Date:** 2026-06-16  
+**Phase:** AR / Asset
+
+### Summary
+Added `burg4.glb` (29.7 MB raw) as the 3D AR model for the third dish (Wagyu Smash Burger). Ran the standard gltf-transform optimization pipeline to produce `burger-final.glb` (5.29 MB). Updated `MODEL_MAP` and `CAMERA_MAP` in `ar-viewer.html`, and changed the third dish AR link slug from `wagyu-smash-burger` to `smash-burger`.
+
+### Optimization
+```bash
+npx @gltf-transform/cli optimize models/burg4.glb models/burger-final.glb --texture-size 1024 --compress false
+npx @gltf-transform/cli prune models/burger-final.glb models/burger-final.glb
+```
+
+| File | Size |
+|---|---|
+| `burg4.glb` (source) | 29.7 MB |
+| `burger-final.glb` (optimized) | 5.29 MB |
+
+### Camera Settings
+Matched steak-salad framing — elevated overhead view, telephoto FOV, tight bounds:
+```js
+'smash-burger': { orbit: '0deg 75deg auto', fov: '30deg', target: '0m 0m 0m', bounds: 'tight' }
+```
+
+### Files Changed
+| File | Change |
+|---|---|
+| `models/burger-final.glb` | New — optimized AR model for Wagyu Smash Burger |
+| `ar-viewer.html` — `MODEL_MAP` | Added `'smash-burger': 'models/burger-final.glb'` |
+| `ar-viewer.html` — `CAMERA_MAP` | Added `'smash-burger'` camera entry |
+| `index.html` — dish 3 AR link | Changed `href` from `?dish=wagyu-smash-burger` to `?dish=smash-burger` |
+
+---
+
 ## Step 33 — Third Dish Changed to Wagyu Smash Burger
 **Date:** 2026-06-16  
 **Phase:** Content / UI

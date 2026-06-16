@@ -254,8 +254,9 @@
         // Key  : the ?dish= slug in the URL
         // Value: relative path to the .glb
         const MODEL_MAP = {
-            'steak-salad': 'models/steak-v3.glb',
-            'shrimp-pasta': 'models/pasta-update.glb',
+            'steak-salad':   'models/steak-v3.glb',
+            'shrimp-pasta':  'models/pasta-update.glb',
+            'smash-burger':  'models/burger-final.glb',
         };
 
 
@@ -269,6 +270,12 @@
         // Falls back to the shared defaults when a slug has no entry.
         const CAMERA_MAP = {
             'steak-salad': {
+                orbit:  '0deg 75deg auto',
+                fov:    '30deg',
+                target: '0m 0m 0m',
+                bounds: 'tight',
+            },
+            'smash-burger': {
                 orbit:  '0deg 75deg auto',
                 fov:    '30deg',
                 target: '0m 0m 0m',
