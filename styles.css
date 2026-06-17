@@ -146,6 +146,8 @@ body {
 }
 
 .hero-eyebrow {
+    display: flex;
+    flex-direction: column;
     font-family: var(--font-ui);
     font-size: 0.62rem;
     letter-spacing: 0.28em;

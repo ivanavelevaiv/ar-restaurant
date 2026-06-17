@@ -537,6 +537,36 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 40 — Fix Hero Subtitle Two-Line Split on Mobile
+**Date:** 2026-06-17  
+**Phase:** UI / Mobile Typography
+
+### Problem
+"WARM FOOD, WARM WELCOME. EXPLORE IVANA'S MENU" was a single text node inside `.hero-eyebrow`, wrapping unpredictably at narrow viewports (375–390px), splitting mid-phrase and reading awkwardly.
+
+### Fix
+Split the text into two `<span>` elements and made `.hero-eyebrow` a flex column, guaranteeing two clean lines at every width:
+
+**`index.html`**
+```html
+<p class="hero-eyebrow">
+    <span>Warm food, warm welcome.</span>
+    <span>Explore Ivana&rsquo;s menu</span>
+</p>
+```
+
+**`styles.css`** — added `display: flex; flex-direction: column` to `.hero-eyebrow`
+
+Each span is short enough to fit on one row at 375px without further wrapping. `text-transform: uppercase` is inherited from the parent rule — no change to the visual style.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` | `.hero-eyebrow` content split into two `<span>` elements |
+| `styles.css` | `.hero-eyebrow` — added `display: flex; flex-direction: column` |
+
+---
+
 ## Step 39 — Fix Shrimp Pasta Model-Viewer Exposure — Reduce Wash-Out in Preview
 **Date:** 2026-06-17  
 **Phase:** AR / Visual Fix
