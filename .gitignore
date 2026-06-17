@@ -6,8 +6,10 @@ Thumbs.db
 models/shrimp-pasta-original.glb
 
 # Raw source assets in the project root (processed copies live under images/)
-*.JPG
-*.PNG
+/*.JPG
+/*.PNG
+/*.jpg
+/*.png
 
 # Blender source/output files — raw assets that belong in a separate asset pipeline
 *.fbx

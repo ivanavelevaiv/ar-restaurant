@@ -537,6 +537,21 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 36 — Update Third Dish Preview Image to Burger Photo
+**Date:** 2026-06-17  
+**Phase:** Content / Assets
+
+### Summary
+Replaced the third dish card preview image (`images/third.jpg`) with `images/burger-preview.jpg` (copied from `arugulaB.jpg`, 287 KB). No CSS changes were needed — `.card-img { object-fit: cover; object-position: center }` is a global rule already shared by all three dish cards.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `images/burger-preview.jpg` | New — burger dish photo (287 KB) |
+| `index.html` — dish 3 card | `src="images/third.jpg"` → `src="images/burger-preview.jpg"` |
+
+---
+
 ## Step 35 — Fix Burger AR: Convert KHR_materials_unlit to Standard PBR
 **Date:** 2026-06-16  
 **Phase:** AR / Bug Fix
