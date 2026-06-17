@@ -21,7 +21,7 @@ const dishData = [
         protein: 48,
         carbs: 52,
         fat: 58,
-        allergens: ["Gluten (brioche bun)", "Dairy (aged cheddar)", "Egg (truffle aioli)"]
+        allergens: ["Gluten", "Dairy", "Egg"]
     }
 ];
 

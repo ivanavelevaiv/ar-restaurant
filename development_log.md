@@ -537,6 +537,29 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 38 — Fix Third Dish Allergen Tags Inline Layout
+**Date:** 2026-06-17  
+**Phase:** UI / Bug Fix
+
+### Root Cause
+Same cause as Step 28 (dish 1 allergen fix): all three dishes share one `openModal()` function that renders identical `<span class="allergen-tag">` elements into `#allergensList`. The container already has `display: flex; flex-wrap: wrap; gap: 0.5rem`. The dish 3 labels `"Gluten (brioche bun)"`, `"Dairy (aged cheddar)"`, `"Egg (truffle aioli)"` were too wide for three tags to sit on one row inside the modal, causing them to wrap vertically. No HTML structure change was needed.
+
+### Fix
+Shortened dish 3 allergen strings in `script.js` to match the concise style of dishes 1 and 2:
+
+| Before | After |
+|---|---|
+| `"Gluten (brioche bun)"` | `"Gluten"` |
+| `"Dairy (aged cheddar)"` | `"Dairy"` |
+| `"Egg (truffle aioli)"` | `"Egg"` |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `script.js` — dishData[2].allergens | Shortened to `["Gluten", "Dairy", "Egg"]` |
+
+---
+
 ## Step 37 — Update Burger Description and Category Label
 **Date:** 2026-06-17  
 **Phase:** Content
