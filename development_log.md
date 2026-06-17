@@ -537,6 +537,44 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 39 — Fix Shrimp Pasta Model-Viewer Exposure — Reduce Wash-Out in Preview
+**Date:** 2026-06-17  
+**Phase:** AR / Visual Fix
+
+### Problem
+The shrimp pasta dish (`shrimp-pasta`) appeared washed out and desaturated in the in-page `<model-viewer>` 3D preview. The model looked correct in real camera AR mode, confirming the issue was with the viewer's lighting/exposure settings rather than the model itself.
+
+### Root Cause
+The global `exposure="1.1"` and `shadow-softness="0.9"` settings in `ar-viewer.html` were too bright and soft for the pasta model's texture characteristics, causing it to appear overexposed and flat.
+
+### Fix
+Added a `LIGHTING_MAP` object (mirroring the existing `CAMERA_MAP` pattern) for per-dish lighting overrides. After the global defaults are applied, per-dish values from `LIGHTING_MAP` overwrite only the relevant attributes.
+
+```js
+const LIGHTING_MAP = {
+    'shrimp-pasta': {
+        exposure:      '0.5',
+        toneMapping:   'commerce',
+        shadowSoftness: '0.5',
+    },
+};
+```
+
+| Setting | Global default | shrimp-pasta override | Effect |
+|---|---|---|---|
+| `exposure` | `1.1` | `0.5` | Darker, richer colours — less overexposure |
+| `tone-mapping` | *(none)* | `commerce` | Warmer, more saturated tone map suited to food |
+| `shadow-softness` | `0.9` | `0.5` | Sharper ground shadow adds depth |
+
+Other dishes (`steak-salad`, `smash-burger`) are unaffected — they have no `LIGHTING_MAP` entry and continue to use the global defaults.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `ar-viewer.html` | Added `LIGHTING_MAP` with `shrimp-pasta` entry; applied overrides after global lighting block |
+
+---
+
 ## Step 38 — Fix Third Dish Allergen Tags Inline Layout
 **Date:** 2026-06-17  
 **Phase:** UI / Bug Fix

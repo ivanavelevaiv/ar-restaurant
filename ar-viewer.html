@@ -283,6 +283,19 @@
             },
         };
 
+        // ── Per-dish lighting overrides ───────────────────────────────────
+        // exposure     : brightness multiplier (default 1.1 — lower = darker/richer)
+        // toneMapping  : 'commerce' gives warmer, more saturated output for food
+        // shadowSoftness: 0–1 (default 0.9 — lower = sharper contact shadow)
+        // Falls back to the shared defaults when a slug has no entry.
+        const LIGHTING_MAP = {
+            'shrimp-pasta': {
+                exposure:      '0.5',
+                toneMapping:   'commerce',
+                shadowSoftness: '0.5',
+            },
+        };
+
         const slug      = new URLSearchParams(window.location.search).get('dish');
         const modelPath = slug ? MODEL_MAP[slug] : null;
 
@@ -338,6 +351,12 @@
             mv.setAttribute('exposure', '1.1');
             mv.setAttribute('shadow-intensity', '1');
             mv.setAttribute('shadow-softness', '0.9');
+
+            // Per-dish lighting overrides (from LIGHTING_MAP above)
+            const lit = LIGHTING_MAP[slug] || {};
+            if (lit.exposure)       mv.setAttribute('exposure',        lit.exposure);
+            if (lit.toneMapping)    mv.setAttribute('tone-mapping',    lit.toneMapping);
+            if (lit.shadowSoftness) mv.setAttribute('shadow-softness', lit.shadowSoftness);
 
             // ── Markerless AR (phone only) ────────────────────────────────
             mv.setAttribute('ar', '');
