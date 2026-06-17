@@ -537,6 +537,65 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 41 — Persist Cart and Scroll Position Across AR Viewer Navigation
+**Date:** 2026-06-17  
+**Phase:** Feature / UX
+
+### Problems Fixed
+
+**Problem 1 — Cart reset to 0 on AR viewer return**  
+The cart was stored only in a JS `const cart = {}` object. Navigating to `ar-viewer.html` (a separate HTML page) destroyed the JS context, so returning to `index.html` always reloaded with an empty cart and badge showing 0.
+
+**Problem 2 — Back button returned to top of page**  
+The scroll position was not saved before navigating to the AR viewer, so the browser restored to the top of the menu on return instead of the dish the user had been viewing.
+
+### Fix — `sessionStorage` for cross-page state
+
+`sessionStorage` persists within the browser tab/session but clears when the tab is closed, making it appropriate for intra-session navigation state.
+
+**`saveCart()` helper** — called after every cart mutation:
+```js
+function saveCart() {
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+}
+```
+Called after: `addToCart()`, qty `+`/`−`, item remove.
+
+**`restoreSession()` IIFE** — runs once at script load, after all functions are defined:
+```js
+(function restoreSession() {
+    const savedCart = sessionStorage.getItem('cart');
+    if (savedCart) {
+        Object.assign(cart, JSON.parse(savedCart));
+        updateBadge();
+        updateAllCardButtons();
+    }
+    const savedY = sessionStorage.getItem('scrollY');
+    if (savedY) {
+        window.scrollTo({ top: parseInt(savedY, 10), behavior: 'instant' });
+        sessionStorage.removeItem('scrollY');  // consume — don't re-apply on refresh
+    }
+})();
+```
+
+**Scroll saver** — attached to every `.btn-ar` link click:
+```js
+document.querySelectorAll('.btn-ar').forEach(link => {
+    link.addEventListener('click', () => {
+        sessionStorage.setItem('scrollY', window.scrollY);
+    });
+});
+```
+
+**Place Order clears sessionStorage cart** — `sessionStorage.removeItem('cart')` added alongside the in-memory clear so a completed order fully resets across pages.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `script.js` | `saveCart()` added; called after every cart mutation and on Place Order clear; `restoreSession()` IIFE and `.btn-ar` scroll saver added at end of file |
+
+---
+
 ## Step 40 — Fix Hero Subtitle Two-Line Split on Mobile
 **Date:** 2026-06-17  
 **Phase:** UI / Mobile Typography

@@ -113,6 +113,10 @@ document.addEventListener('keydown', e => {
 // ── Cart ──────────────────────────────────────────────────────────────────
 const cart = {}; // { dishId: { name, price, qty } }
 
+function saveCart() {
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+}
+
 const cartBtn       = document.getElementById('cartBtn');
 const cartCount     = document.getElementById('cartCount');
 const orderOverlay  = document.getElementById('orderOverlay');
@@ -184,6 +188,7 @@ function addToCart(id, name, price) {
         cart[id] = { name, price, qty: 1 };
     }
     updateBadge();
+    saveCart();
 }
 
 function updateAllCardButtons() {
@@ -225,6 +230,7 @@ orderItems.addEventListener('click', e => {
         updateBadge();
         renderOrderPanel();
         updateAllCardButtons();
+        saveCart();
     }
 
     if (removeBtn) {
@@ -233,6 +239,7 @@ orderItems.addEventListener('click', e => {
         updateBadge();
         renderOrderPanel();
         updateAllCardButtons();
+        saveCart();
     }
 });
 
@@ -258,11 +265,37 @@ document.querySelectorAll('.btn-order').forEach(btn => {
     });
 });
 
+// ── Session restore ───────────────────────────────────────────────────────
+// Runs after all functions are defined. Restores cart state and scroll
+// position when the user returns from the AR viewer (a separate HTML page).
+(function restoreSession() {
+    const savedCart = sessionStorage.getItem('cart');
+    if (savedCart) {
+        Object.assign(cart, JSON.parse(savedCart));
+        updateBadge();
+        updateAllCardButtons();
+    }
+
+    const savedY = sessionStorage.getItem('scrollY');
+    if (savedY) {
+        window.scrollTo({ top: parseInt(savedY, 10), behavior: 'instant' });
+        sessionStorage.removeItem('scrollY');
+    }
+})();
+
+// Save scroll position before navigating to the AR viewer
+document.querySelectorAll('.btn-ar').forEach(link => {
+    link.addEventListener('click', () => {
+        sessionStorage.setItem('scrollY', window.scrollY);
+    });
+});
+
 // Place Order
 placeOrderBtn.addEventListener('click', () => {
     orderConfirm.classList.add('active');
     setTimeout(() => {
         Object.keys(cart).forEach(k => delete cart[k]);
+        sessionStorage.removeItem('cart');
         updateBadge();
         updateAllCardButtons();
         orderConfirm.classList.remove('active');
