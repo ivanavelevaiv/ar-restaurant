@@ -537,6 +537,26 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 37 — Update Burger Description and Category Label
+**Date:** 2026-06-17  
+**Phase:** Content
+
+### Summary
+Updated the third dish card copy to reflect the actual dish — added "fresh wild arugula" to the description and changed the category label from "SIGNATURE SMASH" to "SMASH & GREENS". Allergens in `script.js` (dish index 2) already included `"Egg (truffle aioli)"` — no change needed there. Description appeared only once in `index.html`.
+
+### Changes
+| File | Field | Before | After |
+|---|---|---|---|
+| `index.html` — dish 3 card | Category label | SIGNATURE SMASH | SMASH & GREENS |
+| `index.html` — dish 3 card | Description | …crispy streaky bacon, caramelised onions… | …crispy streaky bacon, fresh wild arugula, caramelised onions… |
+
+### Files Changed
+| File | Change |
+|---|---|
+| `index.html` | Category label and description updated on dish 3 card |
+
+---
+
 ## Step 36 — Update Third Dish Preview Image to Burger Photo
 **Date:** 2026-06-17  
 **Phase:** Content / Assets
