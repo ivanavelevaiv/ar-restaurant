@@ -537,6 +537,39 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 44 — Fix prvo-final.glb AR Positioning — Recentre at Origin
+**Date:** 2026-06-20  
+**Phase:** AR / Bug Fix
+
+### Problem
+`prvo-final.glb` had its entire mesh at Y: −290 to −190 (both negative — 240 units below the world origin). In real camera AR mode, model-viewer places the model's world origin on the detected floor surface, so the dish appeared floating far above the floor or wildly offset. X/Z were also slightly off-centre.
+
+### Root Cause
+The Sketchfab export did not normalise the model position. The `flatten` step in the optimization pipeline bakes parent node transforms into vertex positions, but if the root node had a translation that was not baked (or the export included a scene-level offset), the mesh remained at the wrong position.
+
+### Fix
+Used gltf-transform's `center({ pivot: 'below' })` function via `recentre-prvo.cjs`:
+- `pivot: 'below'` — translates the scene so the bounding box minimum Y = 0 (dish base on AR floor) and X/Z are symmetric around 0
+
+Applied as a node-level translation (not vertex-position bake) so texture UVs and normals are unaffected. File size unchanged (651 KB).
+
+### Before / After (scene bounding box)
+| Axis | Before min | Before max | After min | After max |
+|---|---|---|---|---|
+| X | −152.03 | +155.34 | −153.69 | +153.69 |
+| Y | **−290.50** | **−190.10** | **0** | **+100.40** |
+| Z | −149.78 | +155.57 | −152.67 | +152.67 |
+
+Y now starts at exactly 0 — dish base on the floor. X/Z symmetric around 0.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `recentre-prvo.cjs` | New — applies `center({ pivot: 'below' })` to prvo-final.glb |
+| `models/prvo-final.glb` | Updated in place — node translation added, 651 KB unchanged |
+
+---
+
 ## Step 43 — Replace First Dish AR Model with prvo.glb
 **Date:** 2026-06-20  
 **Phase:** AR / Asset
