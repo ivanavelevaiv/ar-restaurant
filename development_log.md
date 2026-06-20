@@ -537,6 +537,48 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 43 — Replace First Dish AR Model with prvo.glb
+**Date:** 2026-06-20  
+**Phase:** AR / Asset
+
+### Summary
+Replaced the Wagyu Steak AR model (`wagyu-final.glb`) with a new source model `prvo.glb` (3.25 MB). Applied the same unlit→PBR fix and safe pipeline used for burger and wagyu.
+
+### Inspection of prvo.glb (source)
+- Generator: Sketchfab-15.71.0
+- Extensions: `KHR_materials_unlit` (converted — same iOS Quick Look issue)
+- Mesh: `Object_0` — 10,228 vertices, `NORMAL:f32` present
+- Texture: single JPEG baseColorTexture, 2048×2048 (2.92 MB — resized to 1024)
+- **Note:** Model is offset in world space (bbox Y: −290 to −190); `target: '0m 0m 0m'` removed from CAMERA_MAP so `bounds: 'tight'` can auto-centre the camera on the actual mesh
+
+### Fix Applied — unlit→PBR (`fix-prvo-unlit.cjs`)
+`KHR_materials_unlit` would make the model invisible in iOS Quick Look. Converted material `textured_0` to standard PBR (roughness=0.9, metalness=0), disposed root-level extension object.
+
+### Pipeline — safe (no `instance`, no `webp`)
+```bash
+flatten → dedup → join → weld → simplify → prune → resize 1024 → jpeg --quality 80
+```
+
+### Result — prvo-final.glb
+| File | Size | extensionsUsed | Vertices | NORMAL |
+|---|---|---|---|---|
+| `prvo.glb` (source) | 3.25 MB | KHR_materials_unlit | 10,228 | ✓ |
+| `prvo-final.glb` (optimized) | **651 KB** | **none** | 10,166 | ✓ |
+
+### Camera
+`CAMERA_MAP['steak-salad']` updated: removed `target: '0m 0m 0m'` (model Y-offset means world origin is far above the mesh). `bounds: 'tight'` auto-centres the camera on actual geometry. `orbit: '0deg 75deg auto'`, `fov: '30deg'` unchanged.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `fix-prvo-unlit.cjs` | New — unlit→PBR conversion script for prvo.glb |
+| `models/prvo-raw.glb` | New — PBR-converted intermediate |
+| `models/prvo-final.glb` | New — final optimized AR model (651 KB) |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated to `prvo-final.glb` |
+| `ar-viewer.html` — `CAMERA_MAP` | `steak-salad` entry: removed `target` override |
+
+---
+
 ## Step 42 — Replace First Dish AR Model with wagyu.glb
 **Date:** 2026-06-20  
 **Phase:** AR / Asset
