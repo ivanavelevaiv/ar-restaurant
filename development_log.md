@@ -537,6 +537,51 @@ npx @gltf-transform/cli prune models/steak-v2.glb models/steak-v2.glb
 
 ---
 
+## Step 42 — Replace First Dish AR Model with wagyu.glb
+**Date:** 2026-06-20  
+**Phase:** AR / Asset
+
+### Summary
+Replaced the Wagyu Steak AR model (`steak-v3.glb`, rebuilt from `stekdone1.glb`) with a new source model `wagyu.glb`. The previous model had persistent AR issues (EXT_mesh_gpu_instancing and KHR_materials_unlit conflicts across multiple fix iterations). The new model is simpler — a single mesh with a baked color texture from Sketchfab.
+
+### Inspection of wagyu.glb (source)
+- Generator: Sketchfab-16.9.0
+- Extensions: `KHR_materials_unlit` (must be converted — same iOS Quick Look issue as burger)
+- Mesh: `mesh_main_0` — 43,412 vertices, `NORMAL:f32` present (but would be stripped by optimize)
+- Texture: single JPEG baseColorTexture, 8192×8192 (6.76 MB — must be resized)
+
+### Fix Applied — Same pattern as burger (Step 35)
+`KHR_materials_unlit` would make the model invisible in iOS Quick Look. Removed it before optimization using `fix-wagyu-unlit.cjs` (same approach as `fix-burger-unlit.cjs`):
+1. `material.setExtension('KHR_materials_unlit', null)` on all materials
+2. Root-level extension object disposed to remove from `extensionsUsed`
+3. `roughnessFactor=0.9`, `metallicFactor=0.0` set for matte PBR appearance
+
+### Pipeline — Steak-proven (no `instance`, no `webp`)
+```bash
+flatten → dedup → join → weld → simplify → prune → resize 1024 → jpeg --quality 80 → simplify --error 0.01
+```
+
+### Result — wagyu-final.glb
+| File | Size | extensionsUsed | Vertices | NORMAL |
+|---|---|---|---|---|
+| `wagyu.glb` (source) | 11.62 MB | KHR_materials_unlit | 43,412 | ✓ |
+| `wagyu-final.glb` (optimized) | **170 KB** | **none** | 2,094 | ✓ |
+
+Mesh simplifies aggressively (43k → 2k vertices, 95%) because it is a single uniform baked-texture mesh — the 1024×1024 JPEG carries all visual detail. Shape and proportions are preserved; the reduction is not visible at normal AR viewing distances.
+
+### Camera
+Existing `CAMERA_MAP['steak-salad']` entry unchanged: `orbit: '0deg 75deg auto'`, `fov: '30deg'`, `bounds: 'tight'` — matches burger framing.
+
+### Files Changed
+| File | Change |
+|---|---|
+| `fix-wagyu-unlit.cjs` | New — unlit→PBR conversion script for wagyu.glb |
+| `models/wagyu-raw.glb` | New — PBR-converted intermediate |
+| `models/wagyu-final.glb` | New — final optimized AR model (170 KB) |
+| `ar-viewer.html` — `MODEL_MAP` | `steak-salad` updated from `steak-v3.glb` → `wagyu-final.glb` |
+
+---
+
 ## Step 41 — Persist Cart and Scroll Position Across AR Viewer Navigation
 **Date:** 2026-06-17  
 **Phase:** Feature / UX
